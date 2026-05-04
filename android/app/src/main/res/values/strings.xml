@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">krash-out</string>
+    <string name="title_activity_main">krash-out</string>
+    <string name="package_name">com.krashout.app</string>
+    <string name="custom_url_scheme">com.krashout.app</string>
+</resources>

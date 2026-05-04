@@ -1,3 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
 
-@import 'tailwindcss';
+@theme {
+  --color-ocean-light: #3b82f6;
+  --color-ocean: #1e3a8a;
+  --color-ocean-dark: #0f172a;
+
+  --color-shark-white: #f8fafc;
+  --color-shark-gray: #64748b;
+  --color-shark-dark: #334155;
+
+  --color-bite: #ef4444;
+  --color-bite-dark: #b91c1c;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: var(--color-ocean-dark);
+  color: var(--color-shark-white);
+}
