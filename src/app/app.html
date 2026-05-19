@@ -1,5 +1,11 @@
-<main class="flex-1 overflow-y-auto pb-10vh">
-  <router-outlet></router-outlet>
-</main>
+<div class="flex flex-col h-screen w-screen bg-ocean-dark overflow-hidden">
+  
+  <main class="flex-1 overflow-y-auto no-scrollbar pb-20">
+    <router-outlet></router-outlet>
+  </main>
 
-<app-bottom-nav></app-bottom-nav>
+  <nav class="fixed bottom-0 left-0 right-0 z-50">
+    <app-bottom-nav></app-bottom-nav>
+  </nav>
+  
+</div>

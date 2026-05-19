@@ -1,0 +1,99 @@
+<div class="bg-ocean-base p-6 rounded-t-3xl border-t border-ocean-light flex flex-col gap-6 shadow-2xl">
+  
+  <header class="flex flex-col items-center">
+    <h2 class="text-xl font-bold text-text-light text-center w-full">{{ data.titulo }}</h2>
+  </header>
+
+  <div class="flex flex-col gap-4">
+    
+    <div class="flex flex-col gap-2">
+      <label class="text-[10px] font-bold text-shark-base uppercase tracking-widest ml-1">
+        Título de la tarea <span class="text-bites-base">*</span>
+      </label>
+      <input #nombreInput type="text" placeholder="Obligatorio" 
+        [class.border-bites-base]="intentadoGuardar() && !nombreInput.value"
+        class="bg-shark-dark border border-shark-base rounded-xl p-4 text-text-light outline-hidden focus:border-ocean-light transition-all">
+    </div>
+    
+    <div class="flex flex-col gap-2">
+      <label class="text-[10px] font-bold text-shark-base uppercase tracking-widest ml-1">Descripción</label>
+      <textarea #descInput placeholder="Opcional" rows="2"
+        class="bg-shark-dark border border-shark-base rounded-xl p-4 text-text-light outline-hidden focus:border-ocean-light transition-all"></textarea>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label class="text-[10px] font-bold text-shark-base uppercase tracking-widest ml-1">Fecha Límite</label>
+      <div class="relative">
+        <button type="button" (click)="picker.open()" class="w-full bg-shark-dark border border-shark-base rounded-xl p-4 text-left flex items-center gap-3 active:scale-[0.98] transition-transform">
+          <mat-icon class="text-ocean-light">calendar_today</mat-icon>
+          <span class="text-text-light flex-1">
+            {{ fechaSeleccionada() ? (fechaSeleccionada() | date:'dd / MM / yyyy') : 'Opcional' }}
+          </span>
+        </button>
+        <input [matDatepicker]="picker" class="hidden" (dateChange)="onFechaCambiada($event)">
+        <mat-datepicker #picker touchUi></mat-datepicker>
+      </div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label class="text-[10px] font-bold text-shark-base uppercase tracking-widest ml-1"
+        [class.text-bites-base]="intentadoGuardar() && dificultadSeleccionada() === null">
+        Nivel de Dificultad <span class="text-bites-base">*</span>
+      </label>
+      <div class="flex h-14 w-full bg-shark-dark rounded-full border-2 overflow-hidden transition-colors"
+        [class.border-bites-base]="intentadoGuardar() && dificultadSeleccionada() === null"
+        [class.border-shark-base]="!(intentadoGuardar() && dificultadSeleccionada() === null)">
+        
+        <button type="button" (click)="seleccionarDificultad(1)" 
+          [style.background-color]="'var(--color-diff-1)'"
+          [class.opacity-100]="dificultadSeleccionada() === 1"
+          [class.opacity-20]="dificultadSeleccionada() !== 1"
+          class="flex-1 h-full transition-all duration-200 flex items-center justify-center border-r border-shark-base/30">
+          <span class="text-[8px] font-black text-text-dark uppercase leading-none text-center">Muy<br>Fácil</span>
+        </button>
+
+        <button type="button" (click)="seleccionarDificultad(2)" 
+          [style.background-color]="'var(--color-diff-2)'"
+          [class.opacity-100]="dificultadSeleccionada() === 2"
+          [class.opacity-20]="dificultadSeleccionada() !== 2"
+          class="flex-1 h-full transition-all duration-200 flex items-center justify-center border-r border-shark-base/30">
+          <span class="text-[8px] font-black text-text-dark uppercase leading-none text-center">Fácil</span>
+        </button>
+
+        <button type="button" (click)="seleccionarDificultad(3)" 
+          [style.background-color]="'var(--color-diff-3)'"
+          [class.opacity-100]="dificultadSeleccionada() === 3"
+          [class.opacity-20]="dificultadSeleccionada() !== 3"
+          class="flex-1 h-full transition-all duration-200 flex items-center justify-center border-r border-shark-base/30">
+          <span class="text-[8px] font-black text-text-light uppercase leading-none text-center">Normal</span>
+        </button>
+
+        <button type="button" (click)="seleccionarDificultad(4)" 
+          [style.background-color]="'var(--color-diff-4)'"
+          [class.opacity-100]="dificultadSeleccionada() === 4"
+          [class.opacity-20]="dificultadSeleccionada() !== 4"
+          class="flex-1 h-full transition-all duration-200 flex items-center justify-center border-r border-shark-base/30">
+          <span class="text-[8px] font-black text-text-light uppercase leading-none text-center">Difícil</span>
+        </button>
+
+        <button type="button" (click)="seleccionarDificultad(5)" 
+          [style.background-color]="'var(--color-diff-5)'"
+          [class.opacity-100]="dificultadSeleccionada() === 5"
+          [class.opacity-20]="dificultadSeleccionada() !== 5"
+          class="flex-1 h-full transition-all duration-200 flex items-center justify-center">
+          <span class="text-[8px] font-black text-text-light uppercase leading-none text-center">Abisal</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex gap-3 mt-2">
+    <button (click)="cerrar()" class="flex-1 py-4 rounded-xl font-bold text-text-light bg-shark-dark border border-shark-base active:scale-95 transition-transform">
+      Cancelar
+    </button>
+    <button (click)="guardar(nombreInput.value, descInput.value)" class="flex-1 py-4 rounded-xl font-bold text-text-light bg-ocean-light border border-ocean-dark shadow-lg active:scale-95 transition-transform">
+      Confirmar
+    </button>
+  </div>
+
+</div>

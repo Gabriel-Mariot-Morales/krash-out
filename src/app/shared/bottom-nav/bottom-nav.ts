@@ -8,7 +8,7 @@ import { MatIcon } from '@angular/material/icon';
   templateUrl: './bottom-nav.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    class: 'fixed bottom-0 w-full bg-ocean border-t border-shark-dark z-50'
+    class: 'fixed bottom-0 w-full bg-ocean-base border-t border-ocean-light z-50 rounded-t-xl'
   }
 })
 export class BottomNav {
