@@ -10,7 +10,7 @@
         <div class="h-4 w-px bg-shark-dark"></div>
         <div class="flex items-center gap-1">
           <span class="text-yellow-400 font-bold">+{{ toast().monedas }}</span>
-          <mat-icon class="text-yellow-500 text-[18px] size-[18px] leading-none" fontIcon="monetization_on"></mat-icon>
+          <mat-icon class="text-yellow-500 text-4.5 size-4.5 leading-none" fontIcon="monetization_on"></mat-icon>
         </div>
       </div>
     </div>
@@ -35,20 +35,19 @@
         
         <div class="relative w-full rounded-2xl bg-shark-dark">
           
-          <div 
-            class="absolute inset-0 flex justify-between items-center px-6 rounded-2xl z-0 transition-colors duration-200"
+          <div class="absolute inset-0 flex justify-between items-center px-6 rounded-2xl z-0 transition-colors duration-200"
             [style.background-color]="getSwipeBackground(tarea.id)">
             
             <div class="flex items-center gap-2 text-text-light font-bold transition-opacity" 
                  [class.opacity-0]="getSwipeDirection(tarea.id) !== 'right'">
-              <mat-icon class="text-[20px] size-[20px] leading-none" fontIcon="check_circle"></mat-icon>
+              <mat-icon class="text-5 size-5 leading-none" fontIcon="check_circle"></mat-icon>
               <span class="uppercase tracking-widest text-xs">Completar</span>
             </div>
 
             <div class="flex items-center gap-2 text-text-light font-bold transition-opacity" 
                  [class.opacity-0]="getSwipeDirection(tarea.id) !== 'left'">
               <span class="uppercase tracking-widest text-xs">Eliminar</span>
-              <mat-icon class="text-[20px] size-[20px] leading-none" fontIcon="delete_sweep"></mat-icon>
+              <mat-icon class="text-5 size-5 leading-none" fontIcon="delete_sweep"></mat-icon>
             </div>
           </div>
 
@@ -60,20 +59,19 @@
             [style.transform]="getTransform(tarea.id)"
             [style.transition]="activeSwipeId === tarea.id ? 'none' : 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'"
             style="touch-action: pan-y;"
-            class="relative w-full z-10 bg-shark-dark flex items-center shadow-sm border border-shark-base rounded-2xl min-h-[90px] overflow-hidden cursor-grab active:cursor-grabbing">
+            class="relative w-full z-10 bg-shark-dark flex items-center shadow-sm border border-shark-base rounded-2xl min-h-22.5 overflow-hidden cursor-grab active:cursor-grabbing">
             
-            <div 
-              class="absolute left-0 top-0 bottom-0 w-2 z-20" 
+            <div class="absolute left-0 top-0 bottom-0 w-2 z-20" 
               [style.background-color]="'var(--color-diff-' + tarea.dificultad + ')'">
             </div>
 
             <div class="flex flex-col gap-1 flex-1 justify-center py-3 pl-6 pr-4 select-none">
               <h2 class="text-lg font-bold text-ocean-deep leading-tight">{{ tarea.nombre }}</h2>
-              <p class="text-sm text-shark-light line-clamp-2 leading-snug">{{ tarea.descripcion }}</p>
+              <p class="text-sm text-shark-light leading-snug">{{ tarea.descripcion }}</p>
               
               @if (tarea.fecha) {
                 <div class="flex items-center gap-1 text-[10px] text-shark-base font-bold mt-1">
-                  <mat-icon class="text-[14px] size-[14px] leading-none" fontIcon="event"></mat-icon>
+                  <mat-icon class="text-3.5 size-3.5 leading-none" fontIcon="event"></mat-icon>
                   <span>{{ tarea.fecha | date:'dd MMM' }}</span>
                 </div>
               }

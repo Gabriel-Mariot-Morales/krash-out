@@ -9,7 +9,6 @@ import { ItemForm } from '../../shared/components/item-form/item-form';
 
 @Component({
   selector: 'app-tareas',
-  standalone: true,
   imports: [
     CommonModule, 
     MatIconModule, 
@@ -44,6 +43,7 @@ export class Tareas implements OnDestroy {
   abrirCreacion() {
     const ref = this.bottomSheet.open(ItemForm, {
       data: {
+        modo: 'tarea',
         titulo: 'Nueva Tarea',
         placeholderNombre: '¿Qué quieres conseguir?'
       }
@@ -131,4 +131,5 @@ export class Tareas implements OnDestroy {
     if (deltaX < 0) return 'var(--color-action-delete)'; 
     return 'var(--color-shark-dark)';
   }
+  
 }

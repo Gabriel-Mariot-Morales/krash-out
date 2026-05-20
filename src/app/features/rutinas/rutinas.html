@@ -1,1 +1,167 @@
-<p>rutinas works!</p>
+<div class="h-full w-full overflow-y-auto no-scrollbar px-6 pt-6 relative">
+  
+  @if (toast().visible) {
+    <div class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-none">
+      <div class="bg-ocean-base border border-ocean-light px-6 py-3 rounded-2xl shadow-2xl flex items-center gap-4">
+        <div class="flex items-center gap-1">
+          <span class="text-blue-400 font-bold">+{{ toast().xp }}</span>
+          <span class="text-[10px] text-shark-base font-bold uppercase">EXP</span>
+        </div>
+        <div class="h-4 w-px bg-shark-dark"></div>
+        <div class="flex items-center gap-1">
+          <span class="text-yellow-400 font-bold">+{{ toast().monedas }}</span>
+          <mat-icon class="text-yellow-500 text-4.5 size-4.5 leading-none" fontIcon="monetization_on"></mat-icon>
+        </div>
+      </div>
+    </div>
+  }
+
+  <header class="flex flex-col items-center justify-center mb-6 w-full">
+    <div class="flex bg-shark-dark rounded-xl p-1 w-full border border-shark-base/30 mb-4">
+      <button (click)="cambiarSubmenu('hoy')"
+        [class.bg-ocean-light]="submenuActivo() === 'hoy'"
+        [class.text-text-light]="submenuActivo() === 'hoy'"
+        class="flex-1 py-3 text-sm font-bold rounded-lg text-shark-base transition-all">
+        Para hoy
+      </button>
+      <button (click)="cambiarSubmenu('todas')"
+        [class.bg-ocean-light]="submenuActivo() === 'todas'"
+        [class.text-text-light]="submenuActivo() === 'todas'"
+        class="flex-1 py-3 text-sm font-bold rounded-lg text-shark-base transition-all">
+        Tus rutinas
+      </button>
+    </div>
+    <p class="text-[10px] text-shark-base uppercase tracking-[0.2em] mb-3 text-center">
+      Desliza para interactuar con tus rutinas
+    </p>
+    <div class="h-px w-full bg-linear-to-r from-transparent via-text-light to-transparent opacity-20 shadow-sm"></div>
+  </header>
+
+  <section class="flex flex-col gap-4 pb-32">
+    
+    @if (submenuActivo() === 'hoy') {
+      @if (rutinasHoy().length === 0) {
+        <div class="flex flex-col items-center justify-center py-20 opacity-40 text-shark-base">
+          <mat-icon class="text-8xl mb-4 size-20 flex items-center justify-center" fontIcon="assignment_turned_in"></mat-icon>
+          <p class="text-lg text-center font-medium">Libre de rutinas por hoy.</p>
+        </div>
+      } @else {
+        @for (rutina of rutinasHoy(); track rutina.id) {
+          <div class="relative w-full rounded-2xl bg-shark-dark">
+            
+            <div class="absolute inset-0 flex justify-between items-center px-6 rounded-2xl z-0 transition-colors"
+              [style.background-color]="getSwipeBackground(rutina.id)">
+              <div class="flex items-center gap-2 text-text-light font-bold transition-opacity" [class.opacity-0]="getSwipeDirection(rutina.id) !== 'right'">
+                <mat-icon fontIcon="mood"></mat-icon>
+                <span class="uppercase tracking-widest text-xs">Completar</span>
+              </div>
+              <div class="flex items-center gap-2 text-text-light font-bold transition-opacity" [class.opacity-0]="getSwipeDirection(rutina.id) !== 'left'">
+                <span class="uppercase tracking-widest text-xs">Aplazar</span>
+                <mat-icon fontIcon="mood_bad"></mat-icon>
+              </div>
+            </div>
+
+            <article 
+              (pointerdown)="onPointerDown($event, rutina.id)"
+              (pointermove)="onPointerMove($event, rutina.id)"
+              (pointerup)="onPointerUp($event, rutina.id)"
+              (pointercancel)="onPointerUp($event, rutina.id)"
+              [style.transform]="getTransform(rutina.id)"
+              [style.transition]="activeSwipeId === rutina.id ? 'none' : 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'"
+              [style.background-color]="rutina.completadaHoy ? 'var(--color-action-complete)' : rutina.aplazadaHoy ? 'var(--color-action-delete)' : 'var(--color-shark-dark)'"
+              style="touch-action: pan-y;"
+              class="relative w-full z-10 flex items-center shadow-sm border border-shark-base rounded-2xl min-h-22.5 overflow-hidden cursor-grab active:cursor-grabbing transition-colors duration-300">
+              
+              <div class="absolute left-0 top-0 bottom-0 w-2 z-20" 
+                [style.background-color]="'var(--color-diff-' + rutina.dificultad + ')'">
+              </div>
+
+              <div class="flex flex-col gap-1 flex-1 justify-center py-3 pl-6 pr-4 select-none">
+                <h2 class="text-lg font-bold leading-tight" 
+                  [class.text-text-light]="rutina.completadaHoy || rutina.aplazadaHoy"
+                  [class.text-ocean-deep]="!rutina.completadaHoy && !rutina.aplazadaHoy"
+                  [class.line-through]="rutina.completadaHoy || rutina.aplazadaHoy">
+                  {{ rutina.nombre }}
+                </h2>
+                <p class="text-sm text-shark-light leading-snug">{{ rutina.descripcion }}</p>
+                
+                @if (rutina.hora) {
+                  <div class="flex items-center gap-1 text-[10px] text-shark-base font-bold mt-1" [class.text-text-light]="rutina.completadaHoy || rutina.aplazadaHoy">
+                    <mat-icon class="text-3.5 size-3.5 leading-none" fontIcon="schedule"></mat-icon>
+                    <span>{{ rutina.hora }}</span>
+                  </div>
+                }
+              </div>
+            </article>
+
+          </div>
+        }
+      }
+    }
+
+    @if (submenuActivo() === 'todas') {
+      @if (todasLasRutinas().length === 0) {
+        <div class="flex flex-col items-center justify-center py-20 opacity-40 text-shark-base">
+          <mat-icon class="text-8xl mb-4 size-20 flex items-center justify-center" fontIcon="settings_backup_restore"></mat-icon>
+          <p class="text-lg text-center font-medium">No hay rutinas en el inventario.</p>
+        </div>
+      } @else {
+        @for (rutina of todasLasRutinas(); track rutina.id) {
+          <div class="relative w-full rounded-2xl bg-shark-dark">
+            
+            <div class="absolute inset-0 flex justify-between items-center px-6 rounded-2xl z-0 transition-colors"
+              [style.background-color]="getSwipeBackground(rutina.id)">
+              <div class="flex items-center gap-2 text-text-light font-bold transition-opacity" [class.opacity-0]="getSwipeDirection(rutina.id) !== 'right'">
+                <mat-icon fontIcon="edit"></mat-icon>
+                <span class="uppercase tracking-widest text-xs">Editar</span>
+              </div>
+              <div class="flex items-center gap-2 text-text-light font-bold transition-opacity" [class.opacity-0]="getSwipeDirection(rutina.id) !== 'left'">
+                <span class="uppercase tracking-widest text-xs">Eliminar</span>
+                <mat-icon fontIcon="delete_sweep"></mat-icon>
+              </div>
+            </div>
+
+            <article 
+              (pointerdown)="onPointerDown($event, rutina.id)"
+              (pointermove)="onPointerMove($event, rutina.id)"
+              (pointerup)="onPointerUp($event, rutina.id)"
+              (pointercancel)="onPointerUp($event, rutina.id)"
+              [style.transform]="getTransform(rutina.id)"
+              [style.transition]="activeSwipeId === rutina.id ? 'none' : 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)'"
+              style="touch-action: pan-y;"
+              class="relative w-full z-10 bg-shark-dark flex items-center shadow-sm border border-shark-base rounded-2xl min-h-22.5 overflow-hidden cursor-grab active:cursor-grabbing">
+              
+              <div class="absolute left-0 top-0 bottom-0 w-2 z-20" [style.background-color]="'var(--color-diff-' + rutina.dificultad + ')'"></div>
+
+              <div class="flex flex-col gap-1 flex-1 justify-center py-3 pl-6 pr-4 select-none">
+                <h2 class="text-lg font-bold text-ocean-deep leading-tight">{{ rutina.nombre }}</h2>
+                <p class="text-sm text-shark-light leading-snug">{{ rutina.descripcion }}</p>
+                
+                <div class="flex gap-3 items-center mt-1">
+                  @if (rutina.hora) {
+                    <div class="flex items-center gap-1 text-[10px] text-shark-base font-bold">
+                      <mat-icon class="text-3.5 size-3.5 leading-none" fontIcon="schedule"></mat-icon>
+                      <span>{{ rutina.hora }}</span>
+                    </div>
+                  }
+                  
+                  <div class="flex items-center gap-1 text-[10px] text-bites-base font-bold">
+                    <mat-icon class="text-3.5 size-3.5 leading-none" fontIcon="event_repeat"></mat-icon>
+                    <span class="uppercase tracking-wider">{{ getDiasString(rutina.dias) }}</span>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        }
+      }
+    }
+
+  </section>
+
+  <button (click)="abrirCreacion()" class="fixed bottom-24 right-3 bg-ocean-light text-text-light size-16 rounded-xl shadow-lg flex items-center justify-center active:scale-95 border border-ocean-dark z-50">
+    <mat-icon class="text-4xl leading-none" fontIcon="add"></mat-icon>
+  </button>
+
+</div>

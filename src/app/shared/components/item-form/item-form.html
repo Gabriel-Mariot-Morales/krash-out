@@ -1,46 +1,100 @@
-<div class="bg-ocean-base p-6 rounded-t-3xl border-t border-ocean-light flex flex-col gap-6 shadow-2xl">
+<div class="bg-ocean-base p-5 rounded-t-3xl border-t border-ocean-light flex flex-col gap-4 shadow-2xl h-[80vh]">
   
   <header class="flex flex-col items-center">
-    <h2 class="text-xl font-bold text-text-light text-center w-full">{{ data.titulo }}</h2>
+    <h2 class="text-lg font-bold text-text-light text-center w-full">{{ data.titulo }}</h2>
   </header>
 
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col gap-3">
     
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-1.5">
       <label class="text-[10px] font-bold text-shark-base uppercase tracking-widest ml-1">
-        Título de la tarea <span class="text-bites-base">*</span>
+        Nombre <span class="text-bites-base">*</span>
       </label>
-      <input #nombreInput type="text" placeholder="Obligatorio" 
+      <input #nombreInput type="text" 
+        [value]="data.nombreInicial || ''"
+        [placeholder]="data.placeholderNombre" 
         [class.border-bites-base]="intentadoGuardar() && !nombreInput.value"
-        class="bg-shark-dark border border-shark-base rounded-xl p-4 text-text-light outline-hidden focus:border-ocean-light transition-all">
+        class="bg-shark-dark border border-shark-base rounded-xl p-3 text-sm text-text-light outline-hidden focus:border-ocean-light transition-all">
     </div>
     
-    <div class="flex flex-col gap-2">
-      <label class="text-[10px] font-bold text-shark-base uppercase tracking-widest ml-1">Descripción</label>
-      <textarea #descInput placeholder="Opcional" rows="2"
-        class="bg-shark-dark border border-shark-base rounded-xl p-4 text-text-light outline-hidden focus:border-ocean-light transition-all"></textarea>
-    </div>
-
-    <div class="flex flex-col gap-2">
-      <label class="text-[10px] font-bold text-shark-base uppercase tracking-widest ml-1">Fecha Límite</label>
-      <div class="relative">
-        <button type="button" (click)="picker.open()" class="w-full bg-shark-dark border border-shark-base rounded-xl p-4 text-left flex items-center gap-3 active:scale-[0.98] transition-transform">
-          <mat-icon class="text-ocean-light">calendar_today</mat-icon>
-          <span class="text-text-light flex-1">
-            {{ fechaSeleccionada() ? (fechaSeleccionada() | date:'dd / MM / yyyy') : 'Opcional' }}
-          </span>
-        </button>
-        <input [matDatepicker]="picker" class="hidden" (dateChange)="onFechaCambiada($event)">
-        <mat-datepicker #picker touchUi></mat-datepicker>
+    <div class="flex flex-col gap-1.5">
+      <div class="flex justify-between items-center ml-1 pr-1">
+        <label class="text-[10px] font-bold text-shark-base uppercase tracking-widest">Descripción</label>
+        <span class="text-[10px] font-bold text-shark-base" [class.text-bites-base]="descInput.value.length === 100">
+          {{ descInput.value?.length || 0 }} / 100
+        </span>
       </div>
+      <textarea #descInput 
+        [value]="data.descInicial || ''"
+        (input)="0"
+        maxlength="100"
+        placeholder="Opcional" rows="1"
+        class="bg-shark-dark border border-shark-base rounded-xl p-3 text-sm text-text-light outline-hidden focus:border-ocean-light transition-all resize-none"></textarea>
     </div>
 
-    <div class="flex flex-col gap-2">
+    @if (data.modo === 'tarea' || !data.modo) {
+      <div class="flex flex-col gap-1.5">
+        <label class="text-[10px] font-bold text-shark-base uppercase tracking-widest ml-1">Fecha Límite</label>
+        <div class="relative">
+          <button type="button" (click)="picker.open()" class="w-full bg-shark-dark border border-shark-base rounded-xl p-3 text-left flex items-center gap-3 active:scale-[0.98] transition-transform">
+            <mat-icon class="text-ocean-light size-4.5 text-4.5 leading-none">calendar_today</mat-icon>
+            <span class="text-text-light text-sm flex-1">
+              {{ fechaSeleccionada() ? (fechaSeleccionada() | date:'dd / MM / yyyy') : 'Opcional' }}
+            </span>
+          </button>
+          <input [matDatepicker]="picker" class="hidden" (dateChange)="onFechaCambiada($event)">
+          <mat-datepicker #picker touchUi></mat-datepicker>
+        </div>
+      </div>
+    }
+
+    @if (data.modo === 'rutina') {
+      <div class="flex flex-col gap-1.5">
+        <label class="text-[10px] font-bold text-shark-base uppercase tracking-widest ml-1"
+          [class.text-bites-base]="intentadoGuardar() && diasSeleccionados().length === 0">
+          Días <span class="text-bites-base">*</span>
+        </label>
+        
+        <div class="flex gap-1.5 justify-between w-full">
+          <button type="button" (click)="toggleTodos()" 
+            [class.bg-bites-base]="todosSeleccionados()"
+            [class.bg-shark-dark]="!todosSeleccionados()"
+            [class.text-text-light]="todosSeleccionados()"
+            [class.border-bites-base]="todosSeleccionados() || (intentadoGuardar() && diasSeleccionados().length === 0)"
+            [class.border-shark-base]="!todosSeleccionados() && !(intentadoGuardar() && diasSeleccionados().length === 0)"
+            class="flex-1 h-9 border rounded-lg text-[10px] font-bold text-shark-base transition-colors active:scale-95 shadow-xs">
+            Todos
+          </button>
+
+          @for (dia of diasSemana; track dia.id) {
+            <button type="button" (click)="toggleDia(dia.id)"
+              [class.bg-bites-base]="diasSeleccionados().includes(dia.id)"
+              [class.bg-shark-dark]="!diasSeleccionados().includes(dia.id)"
+              [class.text-text-light]="diasSeleccionados().includes(dia.id)"
+              [class.border-bites-base]="diasSeleccionados().includes(dia.id) || (intentadoGuardar() && diasSeleccionados().length === 0)"
+              [class.border-shark-base]="!diasSeleccionados().includes(dia.id) && !(intentadoGuardar() && diasSeleccionados().length === 0)"
+              class="size-9 flex items-center justify-center border rounded-lg text-[10px] font-bold text-shark-base transition-colors active:scale-95 shadow-xs">
+              {{ dia.letra }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <label class="text-[10px] font-bold text-shark-base uppercase tracking-widest ml-1">Hora</label>
+        <div class="relative w-full bg-shark-dark border border-shark-base rounded-xl flex items-center transition-colors focus-within:border-ocean-light overflow-hidden">
+          <input type="time" [value]="horaSeleccionada() || ''" (change)="onHoraCambiada($event)"
+            class="w-full bg-transparent p-3 text-sm text-text-light outline-hidden">
+        </div>
+      </div>
+    }
+
+    <div class="flex flex-col gap-1.5">
       <label class="text-[10px] font-bold text-shark-base uppercase tracking-widest ml-1"
         [class.text-bites-base]="intentadoGuardar() && dificultadSeleccionada() === null">
         Nivel de Dificultad <span class="text-bites-base">*</span>
       </label>
-      <div class="flex h-14 w-full bg-shark-dark rounded-full border-2 overflow-hidden transition-colors"
+      <div class="flex h-10 w-full bg-shark-dark rounded-full border-2 overflow-hidden transition-colors"
         [class.border-bites-base]="intentadoGuardar() && dificultadSeleccionada() === null"
         [class.border-shark-base]="!(intentadoGuardar() && dificultadSeleccionada() === null)">
         
@@ -87,11 +141,11 @@
     </div>
   </div>
 
-  <div class="flex gap-3 mt-2">
-    <button (click)="cerrar()" class="flex-1 py-4 rounded-xl font-bold text-text-light bg-shark-dark border border-shark-base active:scale-95 transition-transform">
+  <div class="flex gap-3 mt-auto pt-4">
+    <button (click)="cerrar()" class="flex-1 py-3 rounded-xl text-sm font-bold text-text-light bg-shark-dark border border-shark-base active:scale-95 transition-transform shadow-xs">
       Cancelar
     </button>
-    <button (click)="guardar(nombreInput.value, descInput.value)" class="flex-1 py-4 rounded-xl font-bold text-text-light bg-ocean-light border border-ocean-dark shadow-lg active:scale-95 transition-transform">
+    <button (click)="guardar(nombreInput.value, descInput.value)" class="flex-1 py-3 rounded-xl text-sm font-bold text-text-light bg-ocean-light border border-ocean-dark shadow-lg active:scale-95 transition-transform">
       Confirmar
     </button>
   </div>
