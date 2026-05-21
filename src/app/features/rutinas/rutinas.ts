@@ -5,6 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RutinasService, Rutina } from '../../core/services/rutinas.service';
 import { StatsService } from '../../shared/services/stats.service';
 import { ToastService } from '../../shared/services/toast.service';
+import { TimeService } from '../../core/services/time.service';
 import { ItemForm } from '../../shared/components/item-form/item-form';
 
 @Component({
@@ -23,6 +24,7 @@ export class Rutinas implements OnDestroy {
   private rutinasService = inject(RutinasService);
   private statsService = inject(StatsService);
   private toastService = inject(ToastService);
+  private timeService = inject(TimeService);
 
   // Control de submenú superior: 'hoy' o 'todas'
   submenuActivo = signal<'hoy' | 'todas'>('hoy');
@@ -43,9 +45,9 @@ export class Rutinas implements OnDestroy {
     this.submenuActivo.set(tipo);
   }
 
-  // Obtiene el dia actual adaptado (1=Lunes, 7=Domingo)
+  // Obtiene el dia actual adaptado (1=Lunes, 7=Domingo) basandose en el reloj del sistema
   private getDiaSemanaActual(): number {
-    const jsDay = new Date().getDay();
+    const jsDay = this.timeService.fechaSimulada().getDay();
     return jsDay === 0 ? 7 : jsDay;
   }
 
@@ -110,12 +112,12 @@ export class Rutinas implements OnDestroy {
         modo: 'rutina',
         titulo: 'Editar Rutina',
         placeholderNombre: 'Nombre de la rutina',
-        nombreInicial: rutina.nombre, // Pasamos el nombre
-        descInicial: rutina.descripcion // Pasamos la descripcion
+        nombreInicial: rutina.nombre,
+        descInicial: rutina.descripcion
       }
     });
 
-    // Rellenamos las variables reactivas en el formulario
+    // Rellenar las variables reactivas en el formulario
     setTimeout(() => {
       const instancia = ref.instance;
       if (instancia) {
@@ -162,7 +164,6 @@ export class Rutinas implements OnDestroy {
       const rutina = this.rutinasHoy().find(r => r.id === id);
       if (rutina) {
         if (deltaX > umbral) {
-          // Derecha: Completar
           if (!rutina.completadaHoy) {
             const premios = this.statsService.añadirRecompensaRutina(rutina.dificultad);
             this.toastService.mostrar(premios.xpGanada, premios.monedasGanadas);
@@ -170,9 +171,7 @@ export class Rutinas implements OnDestroy {
             this.rutinasService.marcarEstadoDiario(id, 'aplazadaHoy', false);
           }
         } else if (deltaX < -umbral) {
-          // Izquierda: Aplazar
           if (!rutina.aplazadaHoy) {
-            // Si ya estaba completada, penalizamos quitando los puntos sin mostrar toast
             if (rutina.completadaHoy) {
               this.statsService.restarRecompensaRutina(rutina.dificultad);
             }
@@ -185,10 +184,8 @@ export class Rutinas implements OnDestroy {
       const rutina = this.todasLasRutinas().find(r => r.id === id);
       if (rutina) {
         if (deltaX > umbral) {
-          // Gestión - Derecha: Editar rutina
           this.abrirEdicion(rutina);
         } else if (deltaX < -umbral) {
-          // Gestión - Izquierda: Borrar de forma definitiva
           this.rutinasService.deleteRutina(id);
         }
       }
