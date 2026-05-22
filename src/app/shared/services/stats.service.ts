@@ -155,7 +155,7 @@ export class StatsService {
   }
 
   // Metodo para añadir recompensas segun la dificultad
-  añadirRecompensa(dificultad: number) {
+  anadirRecompensa(dificultad: number) {
     const xpGanada = dificultad * 20;
     const monedasGanadas = dificultad * 10;
 
@@ -168,7 +168,7 @@ export class StatsService {
   }
 
   // Metodo nuevo para añadir la mitad de recompensa en las rutinas
-  añadirRecompensaRutina(dificultad: number) {
+  anadirRecompensaRutina(dificultad: number) {
     const xpGanada = dificultad * 10;
     const monedasGanadas = dificultad * 5;
 

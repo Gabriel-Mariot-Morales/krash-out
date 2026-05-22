@@ -1,4 +1,4 @@
-<div class="h-full w-full overflow-y-auto no-scrollbar px-6 pt-6 relative flex flex-col">
+<div class="h-full w-full overflow-y-auto no-scrollbar px-6 py-6 relative flex flex-col">
 
   @if (!nombreUsuario()) {
     <div class="flex-1 flex flex-col items-center justify-center my-auto min-h-[60vh]">
@@ -96,6 +96,9 @@
       <div class="grid grid-cols-2 gap-2">
         <button (click)="debugAvanzarDia()" class="bg-shark-dark text-xs font-bold text-text-light py-2.5 rounded-lg border border-shark-base active:scale-95 shadow-xs">Avanzar 1 Día</button>
         <button (click)="debugResetearReloj()" class="bg-shark-dark text-xs font-bold text-text-light py-2.5 rounded-lg border border-shark-base active:scale-95 shadow-xs">Volver a Hoy</button>
+        <button (click)="debugAnadirOro()" class="bg-shark-dark text-xs font-bold text-text-light py-2.5 rounded-lg border border-shark-base active:scale-95 shadow-xs">+ 1000 Monedas</button>
+        <button (click)="debugAnadirExp()" class="bg-shark-dark text-xs font-bold text-text-light py-2.5 rounded-lg border border-shark-base active:scale-95 shadow-xs">+ 1000 EXP</button>
+        <button (click)="debugResetearInventario()" class="bg-shark-dark text-xs font-bold text-text-light py-2.5 rounded-lg border border-shark-base active:scale-95 shadow-xs col-span-2">Resetear Inventario</button>
         <button (click)="debugResetearTodo()" class="bg-red-900/30 border border-red-500 text-xs font-bold text-red-400 py-2.5 rounded-lg col-span-2 active:scale-95 shadow-xs mt-2">BORRAR PARTIDA GUARDADA</button>
       </div>
     </section>

@@ -90,7 +90,7 @@ export class Tareas implements OnDestroy {
 
     if (deltaX > umbral && tarea) {
       // Si desliza a la derecha se completa
-      const recompensas = this.statsService.añadirRecompensa(tarea.dificultad);
+      const recompensas = this.statsService.anadirRecompensa(tarea.dificultad);
       this.toastService.mostrar(recompensas.xpGanada, recompensas.monedasGanadas);
       this.tareasService.deleteTarea(id); 
     } else if (deltaX < -umbral) {

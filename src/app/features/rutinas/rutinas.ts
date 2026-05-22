@@ -165,7 +165,7 @@ export class Rutinas implements OnDestroy {
       if (rutina) {
         if (deltaX > umbral) {
           if (!rutina.completadaHoy) {
-            const premios = this.statsService.añadirRecompensaRutina(rutina.dificultad);
+            const premios = this.statsService.anadirRecompensaRutina(rutina.dificultad);
             this.toastService.mostrar(premios.xpGanada, premios.monedasGanadas);
             this.rutinasService.marcarEstadoDiario(id, 'completadaHoy', true);
             this.rutinasService.marcarEstadoDiario(id, 'aplazadaHoy', false);

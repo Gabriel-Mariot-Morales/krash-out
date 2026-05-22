@@ -52,6 +52,20 @@ export class Perfil {
     this.timeService.resetearReloj();
   }
 
+  debugAnadirOro() {
+    this.statsService.monedas.update(v => v + 1000);
+  }
+
+  debugAnadirExp() {
+    this.statsService.experiencia.update(v => v + 1000);
+  }
+
+  debugResetearInventario() {
+    this.statsService.itemsInventario.set(0);
+    localStorage.removeItem('krash_tienda_inventario');
+    location.reload(); 
+  }
+
   debugResetearTodo() {
     localStorage.clear();
     location.reload(); 
