@@ -2,12 +2,14 @@ import { ItemTienda } from '../models/tienda.model';
 
 // Listado de items de la categoria accesorios
 export const ACCESORIOS_CATALOGO: ItemTienda[] = [
-  { id: 'a1', nombre: 'Gafas de Buceo', categoria: 'accesorios', rareza: 'comun', precio: 50, rutaSvg: 'assets/items/accesorios/gafas-buceo.svg' },
-  { id: 'a2', nombre: 'Gorro de Lana', categoria: 'accesorios', rareza: 'comun', precio: 50, rutaSvg: 'assets/items/accesorios/gorro-lana.svg' },
-  { id: 'a3', nombre: 'Snorkel de Neón', categoria: 'accesorios', rareza: 'raro', precio: 120, rutaSvg: 'assets/items/accesorios/snorkel-neon.svg' },
-  { id: 'a4', nombre: 'Sombrero Pirata', categoria: 'accesorios', rareza: 'raro', precio: 120, rutaSvg: 'assets/items/accesorios/sombrero-pirata.svg' },
-  { id: 'a5', nombre: 'Casco Submarino', categoria: 'accesorios', rareza: 'epico', precio: 275, rutaSvg: 'assets/items/accesorios/casco-submarino.svg' },
-  { id: 'a6', nombre: 'Aleta Dorsal Falsa', categoria: 'accesorios', rareza: 'epico', precio: 275, rutaSvg: 'assets/items/accesorios/aleta-dorsal.svg' },
-  { id: 'a7', nombre: 'Corona Abisal', categoria: 'accesorios', rareza: 'legendario', precio: 600, rutaSvg: 'assets/items/accesorios/corona-abisal.svg' },
-  { id: 'a8', nombre: 'Tridente de Poseidón', categoria: 'accesorios', rareza: 'mitico', precio: 1350, rutaSvg: 'assets/items/accesorios/tridente.svg' }
+  { id: 'a1', nombre: 'Sombrero Amarillo', categoria: 'accesorios', rareza: 'comun', precio: 50, rutaSvg: 'assets/images/avatar/accesorios/sAmarillo.svg' },
+  { id: 'a2', nombre: 'Sombrero Azul', categoria: 'accesorios', rareza: 'comun', precio: 50, rutaSvg: 'assets/images/avatar/accesorios/sAzul.svg' },
+  { id: 'a3', nombre: 'Sombrero Blanco', categoria: 'accesorios', rareza: 'comun', precio: 50, rutaSvg: 'assets/images/avatar/accesorios/sBlanco.svg' },
+  { id: 'a4', nombre: 'Sombrero Rojo', categoria: 'accesorios', rareza: 'comun', precio: 50, rutaSvg: 'assets/images/avatar/accesorios/sRojo.svg' },
+  { id: 'a5', nombre: 'Sombrero Verde', categoria: 'accesorios', rareza: 'comun', precio: 50, rutaSvg: 'assets/images/avatar/accesorios/sVerde.svg' },
+  { id: 'a6', nombre: 'Sombrero Celeste', categoria: 'accesorios', rareza: 'raro', precio: 120, rutaSvg: 'assets/images/avatar/accesorios/sCeleste.svg' },
+  { id: 'a7', nombre: 'Sombrero Azul Marino', categoria: 'accesorios', rareza: 'raro', precio: 120, rutaSvg: 'assets/images/avatar/accesorios/sAzulMarino.svg' },
+  { id: 'a8', nombre: 'Sombrero Morado', categoria: 'accesorios', rareza: 'epico', precio: 275, rutaSvg: 'assets/images/avatar/accesorios/sMorado.svg' },
+  { id: 'a9', nombre: 'Sombrero Negro', categoria: 'accesorios', rareza: 'legendario', precio: 600, rutaSvg: 'assets/images/avatar/accesorios/sNegro.svg' },
+  { id: 'a10', nombre: 'Sombrero Arcoíris', categoria: 'accesorios', rareza: 'mitico', precio: 1350, rutaSvg: 'assets/images/avatar/accesorios/sArcoiris.svg' }
 ];

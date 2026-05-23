@@ -1,1 +1,103 @@
-<p>avatar works!</p>
+<div class="h-full w-full overflow-hidden px-4 py-4 relative flex flex-col gap-3">
+
+  <header class="flex flex-col items-center justify-center w-full shrink-0">
+    <h1 class="text-xl font-bold text-text-light mb-1 text-center w-full">Avatar</h1>
+    <div class="h-px w-full bg-linear-to-r from-transparent via-text-light to-transparent opacity-20 shadow-sm mt-0.5"></div>
+  </header>
+
+  <section class="w-full shrink-0 flex gap-4 h-1/3 min-h-48">
+    
+    <div class="flex-1 bg-shark-dark/60 border border-shark-base rounded-2xl relative overflow-hidden flex flex-col items-center justify-center p-4 shadow-inner group">
+      
+      <div class="h-[85%] max-h-36 flex flex-col items-center justify-center" style="image-rendering: pixelated;">
+        
+        @if (getItemEquipado('accesorios'); as item) {
+          <img [src]="'/' + item.rutaSvg" [alt]="item.nombre" class="h-1/3 w-auto block object-contain" />
+        } @else {
+          <img src="/assets/images/avatar/accesorios/cabeza.svg" alt="cabeza base" class="h-1/3 w-auto block object-contain" />
+        }
+
+        @if (getItemEquipado('superior'); as item) {
+          <img [src]="'/' + item.rutaSvg" [alt]="item.nombre" class="h-1/3 w-auto block object-contain" />
+        } @else {
+          <img src="/assets/images/avatar/superior/cBlanca.svg" alt="camiseta base" class="h-1/3 w-auto block object-contain" />
+        }
+
+        @if (getItemEquipado('inferior'); as item) {
+          <img [src]="'/' + item.rutaSvg" [alt]="item.nombre" class="h-1/3 w-auto block object-contain" />
+        } @else {
+          <img src="/assets/images/avatar/inferior/pBlanco.svg" alt="pantalon base" class="h-1/3 w-auto block object-contain" />
+        }
+
+      </div>
+
+      <span class="absolute bottom-2 right-3 text-xs font-black text-shark-base uppercase tracking-tighter opacity-30">{{ nombreUsuario() }}</span>
+    </div>
+
+    <div class="w-24 flex flex-col gap-2 shrink-0">
+      <button (click)="guardarAvatar()" 
+              class="flex-1 bg-ocean-base border border-ocean-light rounded-xl flex flex-col items-center justify-center gap-1 active:scale-90 transition-transform shadow-lg">
+        <mat-icon class="text-text-light size-5 text-xl" fontIcon="save"></mat-icon>
+        <span class="text-xs font-bold text-text-light uppercase">Guardar</span>
+      </button>
+      
+      <button (click)="quitarTodo()" 
+              class="h-14 bg-shark-dark border border-bites-base/50 rounded-xl flex flex-col items-center justify-center gap-0.5 active:scale-90 transition-transform">
+        <mat-icon class="text-bites-base size-5 text-xl" fontIcon="delete_sweep"></mat-icon>
+        <span class="text-xs font-bold text-bites-base uppercase">Limpiar</span>
+      </button>
+    </div>
+
+  </section>
+
+  <div class="h-px w-full bg-shark-base opacity-50 shadow-sm shrink-0"></div>
+
+  <section class="flex-1 w-full overflow-y-auto no-scrollbar pb-24 flex flex-col gap-4">
+    
+    @if (misItems().length === 0) {
+      <div class="flex flex-col items-center justify-center flex-1 opacity-50 py-10">
+        <mat-icon class="text-shark-light size-12 text-5xl mb-2" fontIcon="inventory_2"></mat-icon>
+        <p class="text-xs font-bold text-shark-light">Armario vacío</p>
+      </div>
+    }
+
+    @for (cat of ['accesorios', 'superior', 'inferior']; track cat) {
+      @if (getItemsPorCategoria(cat).length > 0) {
+        
+        <div class="flex flex-col gap-1.5 w-full">
+          <h2 class="text-xs font-black text-shark-base uppercase tracking-widest pl-1">{{ cat }}</h2>
+          
+          <div class="grid grid-cols-3 gap-2.5 w-full">
+            @for (item of getItemsPorCategoria(cat); track item.id) {
+              
+              <div (click)="toggleEquipar(item)"
+                   class="relative aspect-square w-full flex flex-col rounded-xl p-0.5 overflow-hidden shadow-md transition-all active:scale-95" 
+                   [ngClass]="getRarezaColor(item.rareza)">
+                
+                <div class="bg-shark-dark w-full h-full rounded-lg flex flex-col p-1.5 relative z-10 justify-center items-center">
+                  
+                  @if (estaEquipado(item.id)) {
+                    <div class="absolute top-1 right-1 z-20 size-4 bg-bites-base rounded-full border border-shark-dark flex items-center justify-center shadow-sm">
+                      <svg class="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                  }
+
+                  <img [src]="'/' + item.rutaSvg" [alt]="item.nombre" class="size-8 object-contain transition-opacity" style="image-rendering: pixelated;"
+                       [class.opacity-100]="estaEquipado(item.id)"
+                       [class.opacity-40]="!estaEquipado(item.id)" />
+                  
+                  <span class="text-xs text-center font-bold text-shark-light leading-tight w-full px-1 mt-1 break-words">{{ item.nombre }}</span>
+                </div>
+              </div>
+
+            }
+          </div>
+        </div>
+
+      }
+    }
+  </section>
+
+</div>

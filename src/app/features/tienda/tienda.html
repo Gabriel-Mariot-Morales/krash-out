@@ -16,7 +16,7 @@
     
     @for (cat of ['accesorios', 'superior', 'inferior']; track cat) {
       <div class="flex flex-col h-full min-h-0">
-        <h2 class="text-[9px] font-black text-shark-base uppercase tracking-widest pl-1 mb-0.5 shrink-0">{{ cat }}</h2>
+        <h2 class="text-xs font-black text-shark-base uppercase tracking-widest pl-1 mb-0.5 shrink-0">{{ cat }}</h2>
         
         <div class="grid grid-cols-3 gap-2 flex-1 min-h-0 h-full">
           @for (item of getItemsPorCategoria(cat); track item.id) {
@@ -30,10 +30,10 @@
                 <span class="text-[10px] font-black text-shark-base uppercase tracking-widest -rotate-45 select-none">Agotado</span>
               </div>
             } @else {
-              <div class="relative h-full w-full flex flex-col rounded-xl p-[2px] overflow-hidden shadow-lg transition-transform active:scale-95" 
+              <div class="relative h-full w-full flex flex-col rounded-xl p-0.5 overflow-hidden shadow-lg transition-transform active:scale-95" 
                    [ngClass]="getRarezaColor(item.rareza)">
                 
-                <div class="bg-shark-dark w-full h-full rounded-[10px] flex flex-col p-1.5 relative z-10 justify-between min-h-0">
+                <div class="bg-shark-dark w-full h-full rounded-lg flex flex-col p-1.5 relative z-10 justify-between min-h-0">
                   
                   <button (click)="togglePin(item.id)" 
                           class="absolute top-1.5 right-1.5 z-20 transition-all drop-shadow-md" 
@@ -46,8 +46,12 @@
                   </button>
 
                   <div class="flex-1 flex flex-col items-center justify-center p-1 overflow-hidden min-h-0">
-                    <mat-icon class="text-ocean-light size-8 text-[32px] opacity-50 mb-0.5 shrink-0" fontIcon="category"></mat-icon>
-                    <span class="text-[7px] text-center font-bold text-shark-light leading-tight line-clamp-2 px-1">{{ item.nombre }}</span>
+                    @if (item.rutaSvg) {
+                      <img [src]="'/' + item.rutaSvg" [alt]="item.nombre" class="size-8 object-contain mb-0.5 shrink-0" style="image-rendering: pixelated;" />
+                    } @else {
+                      <mat-icon class="text-ocean-light size-8 text-[32px] opacity-50 mb-0.5 shrink-0" fontIcon="category"></mat-icon>
+                    }
+                    <span class="text-xs text-center font-bold text-shark-light leading-tight break-words w-full px-1 mt-1">{{ item.nombre }}</span>
                   </div>
 
                   <button (click)="comprar(item.id)" 
