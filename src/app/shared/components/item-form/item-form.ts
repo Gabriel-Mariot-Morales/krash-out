@@ -55,8 +55,8 @@ export class ItemForm {
   toggleDia(id: number) {
     const actuales = this.diasSeleccionados();
     if (actuales.includes(id)) {
-      // Si ya está, lo quitamos
-      this.diasSeleccionados.set(actuales.filter(d => d !== id));
+      // Si ya está, lo quitamos (Cambiado 'd' por 'diaID' para mayor claridad)
+      this.diasSeleccionados.set(actuales.filter(diaID => diaID !== id));
     } else {
       // Si no está, lo añadimos
       this.diasSeleccionados.set([...actuales, id]);

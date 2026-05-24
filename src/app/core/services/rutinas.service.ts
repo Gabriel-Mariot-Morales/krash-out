@@ -1,5 +1,5 @@
 import { Injectable, signal, effect, inject } from '@angular/core';
-import { TimeService } from './time.service';
+import { TimeService } from '../../shared/services/time.service';
 
 // Estructura de una rutina reutilizable
 export interface Rutina {
@@ -36,16 +36,18 @@ export class RutinasService {
     });
 
     // Escucha constante al reloj para desencadenar el reinicio diario
+    // Nota: allowSignalWrites ya no es necesario en Angular 21
     effect(() => {
       const hoy = this.timeService.fechaSimulada();
       this.revisarCambioDeDia(hoy);
-    }, { allowSignalWrites: true });
+    });
   }
 
   // Metodo para leer las rutinas guardadas en el dispositivo
   private cargarRutinas() {
     const almacenadas = localStorage.getItem('shark_rutinas');
     const diaGuardado = localStorage.getItem('shark_rutinas_dia');
+    
     if (almacenadas) {
       try {
         this.rutinas.set(JSON.parse(almacenadas));
@@ -53,6 +55,7 @@ export class RutinasService {
         console.error("Error cargando rutinas:", e);
       }
     }
+    
     if (diaGuardado) {
       this.ultimoDiaRevisado.set(diaGuardado);
     }
@@ -70,8 +73,9 @@ export class RutinasService {
   private revisarCambioDeDia(hoy: Date) {
     const fechaStr = this.getLocalDateString(hoy);
     
+    // Si hay un dia guardado y es distinto al actual, reiniciamos el estado de las rutinas
     if (this.ultimoDiaRevisado() && this.ultimoDiaRevisado() !== fechaStr) {
-      this.rutinas.update(r => r.map(rutina => ({
+      this.rutinas.update(listaRutinas => listaRutinas.map(rutina => ({
         ...rutina,
         completadaHoy: false,
         aplazadaHoy: false
@@ -82,24 +86,24 @@ export class RutinasService {
 
   // Inserta una nueva rutina en la lista
   addRutina(rutina: Rutina) {
-    this.rutinas.update(r => [...r, rutina]);
+    this.rutinas.update(listaRutinas => [...listaRutinas, rutina]);
   }
 
   // Elimina una rutina de forma permanente de la lista
   deleteRutina(id: string) {
-    this.rutinas.update(r => r.filter(rutina => rutina.id !== id));
+    this.rutinas.update(listaRutinas => listaRutinas.filter(rutina => rutina.id !== id));
   }
 
   // Modifica los datos de una rutina existente
   updateRutina(id: string, valoresActualizados: Partial<Rutina>) {
-    this.rutinas.update(r => r.map(rutina => 
+    this.rutinas.update(listaRutinas => listaRutinas.map(rutina => 
       rutina.id === id ? { ...rutina, ...valoresActualizados } : rutina
     ));
   }
 
   // Cambia el estado diario de una rutina (completada o aplazada)
   marcarEstadoDiario(id: string, campo: 'completadaHoy' | 'aplazadaHoy', valor: boolean) {
-    this.rutinas.update(r => r.map(rutina => 
+    this.rutinas.update(listaRutinas => listaRutinas.map(rutina => 
       rutina.id === id ? { ...rutina, [campo]: valor } : rutina
     ));
   }

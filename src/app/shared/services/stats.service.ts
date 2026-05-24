@@ -1,10 +1,11 @@
 import { Injectable, signal, effect, computed, inject } from '@angular/core';
-import { TimeService } from '../../core/services/time.service';
+import { TimeService } from './time.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StatsService {
+  // Servicio para simular el paso del tiempo
   private timeService = inject(TimeService);
 
   // Señales para las monedas y la experiencia
@@ -27,19 +28,19 @@ export class StatsService {
     let lvl = 1;
     let xpRequerida = 200;
 
+    // Bucle para calcular el nivel actual restando la experiencia requerida
     while (xpRestante >= xpRequerida) {
       xpRestante -= xpRequerida;
       lvl++;
       xpRequerida += 50;
     }
 
-    const porcentaje = (xpRestante / xpRequerida) * 100;
-
+    // Devuelve el estado actual del progreso del usuario
     return {
       nivel: lvl,
       xpActual: xpRestante,
       xpMeta: xpRequerida,
-      porcentaje: porcentaje
+      porcentaje: (xpRestante / xpRequerida) * 100
     };
   });
 
@@ -100,7 +101,7 @@ export class StatsService {
     effect(() => {
       const hoy = this.timeService.fechaSimulada();
       this.comprobarRachaPerdida(hoy);
-    }, { allowSignalWrites: true });
+    });
   }
 
   // Metodo para guardar el nombre de usuario inicial
@@ -110,33 +111,22 @@ export class StatsService {
 
   // Metodo auxiliar de seguridad para formatear la fecha local sin problemas de zona horaria
   private getLocalDateString(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   }
 
   // Metodo auxiliar para calcular dias exactos de diferencia aislando saltos de horario de verano
   private getDiferenciaDias(fecha1Str: string, fecha2Date: Date): number {
     if (!fecha1Str) return 0;
-    
     const [y1, m1, d1] = fecha1Str.split('-').map(Number);
-    const y2 = fecha2Date.getFullYear();
-    const m2 = fecha2Date.getMonth() + 1;
-    const d2 = fecha2Date.getDate();
-
     const utc1 = Date.UTC(y1, m1 - 1, d1);
-    const utc2 = Date.UTC(y2, m2 - 1, d2);
-    
+    const utc2 = Date.UTC(fecha2Date.getFullYear(), fecha2Date.getMonth(), fecha2Date.getDate());
     return Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24));
   }
 
   // Metodo para verificar si han pasado mas de 24h sin completar nada y romper la racha
   private comprobarRachaPerdida(hoy: Date) {
     if (!this.ultimaActividad()) return;
-    
-    const diffDias = this.getDiferenciaDias(this.ultimaActividad(), hoy);
-    if (diffDias > 1 && this.rachaActual() > 0) {
+    if (this.getDiferenciaDias(this.ultimaActividad(), hoy) > 1 && this.rachaActual() > 0) {
       this.rachaActual.set(0);
     }
   }
@@ -144,9 +134,8 @@ export class StatsService {
   // Metodo interno para actualizar la racha de forma progresiva
   private procesarAumentoRacha() {
     const hoyStr = this.getLocalDateString(this.timeService.fechaSimulada());
-    
     if (this.ultimaActividad() !== hoyStr) {
-      this.rachaActual.update(v => v + 1);
+      this.rachaActual.update(racha => racha + 1);
       if (this.rachaActual() > this.rachaMasLarga()) {
         this.rachaMasLarga.set(this.rachaActual());
       }
@@ -159,9 +148,9 @@ export class StatsService {
     const xpGanada = dificultad * 20;
     const monedasGanadas = dificultad * 10;
 
-    this.experiencia.update(v => v + xpGanada);
-    this.monedas.update(v => v + monedasGanadas);
-    this.tareasCompletadas.update(v => v + 1);
+    this.experiencia.update(expActual => expActual + xpGanada);
+    this.monedas.update(monedasActuales => monedasActuales + monedasGanadas);
+    this.tareasCompletadas.update(tareas => tareas + 1);
     this.procesarAumentoRacha();
 
     return { xpGanada, monedasGanadas };
@@ -172,8 +161,8 @@ export class StatsService {
     const xpGanada = dificultad * 10;
     const monedasGanadas = dificultad * 5;
 
-    this.experiencia.update(v => v + xpGanada);
-    this.monedas.update(v => v + monedasGanadas);
+    this.experiencia.update(expActual => expActual + xpGanada);
+    this.monedas.update(monedasActuales => monedasActuales + monedasGanadas);
     this.procesarAumentoRacha();
 
     return { xpGanada, monedasGanadas };
@@ -181,10 +170,7 @@ export class StatsService {
 
   // Metodo para retirar la recompensa si el usuario cancela una rutina completada
   restarRecompensaRutina(dificultad: number) {
-    const xpPerdida = dificultad * 10;
-    const monedasPerdidas = dificultad * 5;
-
-    this.experiencia.update(v => Math.max(0, v - xpPerdida));
-    this.monedas.update(v => Math.max(0, v - monedasPerdidas));
+    this.experiencia.update(expActual => Math.max(0, expActual - (dificultad * 10)));
+    this.monedas.update(monedasActuales => Math.max(0, monedasActuales - (dificultad * 5)));
   }
 }

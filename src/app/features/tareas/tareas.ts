@@ -6,6 +6,7 @@ import { TareasService } from '../../core/services/tareas.service';
 import { StatsService } from '../../shared/services/stats.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { ItemForm } from '../../shared/components/item-form/item-form';
+import { Tarea } from '../../core/models/tarea'; 
 
 @Component({
   selector: 'app-tareas',
@@ -19,27 +20,27 @@ import { ItemForm } from '../../shared/components/item-form/item-form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class Tareas implements OnDestroy {
-  // Inyección de los servicios necesarios
+  // Inyeccion de los servicios necesarios para el componente
   private bottomSheet = inject(MatBottomSheet);
   private tareasService = inject(TareasService);
   private statsService = inject(StatsService);
   private toastService = inject(ToastService);
   
-  // Obtenemos la lista de tareas del servicio
+  // Obtenemos la lista de tareas del servicio para pintarlas
   tareas = this.tareasService.tareas;
   toast = this.toastService.data;
 
-  // Variables para controlar el movimiento de deslizamiento
+  // Variables para controlar el movimiento de deslizamiento del dedo
   activeSwipeId: string | null = null;
   startX: number = 0;
   currentX: number = 0;
 
-  // Se ejecuta automáticamente cuando el usuario sale de esta vista
+  // Se ejecuta automaticamente cuando el usuario sale de esta vista
   ngOnDestroy() {
     this.toastService.ocultarInmediato();
   }
 
-  // Método para abrir el formulario de creación de tareas
+  // Metodo para abrir el formulario de creacion de tareas inferior
   abrirCreacion() {
     const ref = this.bottomSheet.open(ItemForm, {
       data: {
@@ -49,7 +50,7 @@ export class Tareas implements OnDestroy {
       }
     });
 
-    // Guardamos la tarea si el formulario devuelve datos
+    // Guardamos la tarea si el formulario devuelve datos validos
     ref.afterDismissed().subscribe(result => {
       if (result) {
         this.tareasService.addTarea({
@@ -73,39 +74,39 @@ export class Tareas implements OnDestroy {
     (event.target as HTMLElement).setPointerCapture(event.pointerId);
   }
 
-  // Registramos el movimiento del dedo o ratón
+  // Registramos el movimiento del dedo o raton en el eje horizontal
   onPointerMove(event: PointerEvent, id: string) {
     if (this.activeSwipeId !== id) return;
     this.currentX = event.clientX;
   }
 
-  // Función para cuando el usuario suelta la tarea y ejecutar la acción
+  // Funcion para cuando el usuario suelta la tarea y evaluar la accion
   onPointerUp(event: PointerEvent, id: string) {
     if (this.activeSwipeId !== id) return;
     
     const deltaX = this.currentX - this.startX;
-    const umbral = 100; // Distancia necesaria para activar la acción
+    const umbral = 100; // Distancia necesaria para activar la accion
 
-    const tarea = this.tareas().find(t => t.id === id);
+    const tareaSeleccionada = this.tareas().find(tareaAct => tareaAct.id === id);
 
-    if (deltaX > umbral && tarea) {
-      // Si desliza a la derecha se completa
-      const recompensas = this.statsService.anadirRecompensa(tarea.dificultad);
+    if (deltaX > umbral && tareaSeleccionada) {
+      // Si desliza a la derecha completamos la tarea y damos premios
+      const recompensas = this.statsService.anadirRecompensa(tareaSeleccionada.dificultad);
       this.toastService.mostrar(recompensas.xpGanada, recompensas.monedasGanadas);
       this.tareasService.deleteTarea(id); 
     } else if (deltaX < -umbral) {
-      // Si desliza a la izquierda se elimina
+      // Si desliza a la izquierda eliminamos la tarea sin premio
       this.tareasService.deleteTarea(id);
     }
 
-    // Limpiamos los datos del deslizamiento
+    // Limpiamos los datos del deslizamiento para el siguiente uso
     this.activeSwipeId = null;
     this.startX = 0;
     this.currentX = 0;
     (event.target as HTMLElement).releasePointerCapture(event.pointerId);
   }
 
-  // Método para mover la tarjeta visualmente en la pantalla
+  // Metodo para mover la tarjeta visualmente en la pantalla con CSS
   getTransform(id: string): string {
     if (this.activeSwipeId === id) {
       const deltaX = this.currentX - this.startX;
@@ -114,7 +115,7 @@ export class Tareas implements OnDestroy {
     return 'translateX(0px)';
   }
 
-  // Determina si estamos deslizando a la izquierda o derecha para mostrar iconos
+  // Determina si estamos deslizando a la izquierda o derecha para mostrar iconos traseros
   getSwipeDirection(id: string): 'left' | 'right' | 'none' {
     if (this.activeSwipeId !== id) return 'none';
     const deltaX = this.currentX - this.startX;
@@ -123,7 +124,7 @@ export class Tareas implements OnDestroy {
     return 'none';
   }
 
-  // Devuelve el color del fondo según la dirección del deslizamiento
+  // Devuelve el color del fondo segun la direccion del deslizamiento
   getSwipeBackground(id: string): string {
     if (this.activeSwipeId !== id) return 'var(--color-shark-dark)';
     const deltaX = this.currentX - this.startX;
@@ -131,5 +132,4 @@ export class Tareas implements OnDestroy {
     if (deltaX < 0) return 'var(--color-action-delete)'; 
     return 'var(--color-shark-dark)';
   }
-  
 }

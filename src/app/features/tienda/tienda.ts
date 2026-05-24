@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { TiendaService } from '../../core/services/tienda.service';
 import { StatsService } from '../../shared/services/stats.service';
-import { RarezaItem } from '../../core/models/tienda.model';
+import { RarezaItem, ItemEnVenta } from '../../core/models/tienda.model'; // Añadido ItemEnVenta
 
 @Component({
   selector: 'app-tienda',
@@ -57,15 +57,17 @@ export class Tienda implements OnInit, OnDestroy {
   }
 
   // Extrae unicamente los objetos de una categoria especifica y rellena huecos si faltan
-  getItemsPorCategoria(categoria: string): any[] {
-    const items = this.escaparate().filter(item => item.categoria === categoria);
-    const resultado: any[] = [...items];
+  getItemsPorCategoria(categoria: string) {
+    const itemsActuales = this.escaparate().filter(item => item.categoria === categoria);
+    
+    // Tipamos el array combinando el modelo original con la propiedad extra de stock
+    const resultado = [...itemsActuales] as (ItemEnVenta & { sinExistencias?: boolean })[];
     
     while (resultado.length < 3) {
       resultado.push({ 
         id: `vacio-${categoria}-${resultado.length}`, 
         sinExistencias: true 
-      });
+      } as ItemEnVenta & { sinExistencias?: boolean });
     }
     
     return resultado;
@@ -81,14 +83,14 @@ export class Tienda implements OnInit, OnDestroy {
     this.tiendaService.comprarItem(id);
   }
 
-  // Asigna un color de fondo/borde basado en la rareza del objeto
+  // Asigna un color de fondo/borde basado en las variables del archivo styles.css
   getRarezaColor(rareza: RarezaItem): string {
     switch (rareza) {
-      case 'comun': return 'bg-green-400';
-      case 'raro': return 'bg-blue-400';
-      case 'epico': return 'bg-purple-400';
-      case 'legendario': return 'bg-yellow-400';
-      case 'mitico': return 'bg-linear-to-tr from-red-500 via-yellow-400 to-purple-600';
+      case 'comun': return 'bg-[var(--color-rareza-comun)]';
+      case 'raro': return 'bg-[var(--color-rareza-raro)]';
+      case 'epico': return 'bg-[var(--color-rareza-epico)]';
+      case 'legendario': return 'bg-[var(--color-rareza-legendario)]';
+      case 'mitico': return 'bg-rareza-mitico';
       default: return 'bg-shark-base';
     }
   }

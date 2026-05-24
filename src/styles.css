@@ -13,17 +13,33 @@
   --color-text-light: #f9fafb;
   --color-text-dark: #111827;
 
+  /* Colores de Dificultad (Tareas/Rutinas) */
   --color-diff-1: #bfdbfe;
   --color-diff-2: #60a5fa;
   --color-diff-3: #2563eb;
   --color-diff-4: #1d4ed8;
   --color-diff-5: #1e3a8a;
 
+  /* Colores de Alerta y Rachas */
   --color-bites-base: #dc2626;
   --color-bites-dark: #991b1b;
 
-  --color-action-complete: rgba(13, 148, 136, 0.5); /* Turquesa suave y translúcido */
-  --color-action-delete: rgba(220, 38, 38, 0.5); /* Rojo "bite" translúcido */
+  /* Estados de Deslizamiento (Swipe) */
+  --color-action-complete: rgba(13, 148, 136, 0.5);
+  --color-action-delete: rgba(220, 38, 38, 0.5);
+
+  /* Colores Universales de Rareza (Tienda y Avatar) */
+  --color-rareza-comun: #4ade80; /* green-400 */
+  --color-rareza-raro: #60a5fa; /* blue-400 */
+  --color-rareza-epico: #c084fc; /* purple-400 */
+  --color-rareza-legendario: #facc15; /* yellow-400 */
+}
+
+/* Variable estática para el degradado mítico que no cabe en el @theme basico */
+@layer utilities {
+  .bg-rareza-mitico {
+    background-image: linear-gradient(to top right, #ef4444, #facc15, #9333ea);
+  }
 }
 
 @layer base {
@@ -33,9 +49,9 @@
     width: 100%;
     height: 100%;
     background-color: var(--color-ocean-dark);
-    overscroll-behavior: none;
   }
 
+  /* Estilos nativos del DatePicker forzados a tema oscuro */
   .mat-datepicker-content {
     background-color: var(--color-ocean-base) !important;
     color: var(--color-text-light) !important;
@@ -87,6 +103,7 @@
     backdrop-filter: blur(4px);
   }
 
+  /* Estilos del contenedor inferior de creación (BottomSheet) */
   .mat-bottom-sheet-container {
     background-color: var(--color-ocean-base) !important;
     color: var(--color-text-light) !important;

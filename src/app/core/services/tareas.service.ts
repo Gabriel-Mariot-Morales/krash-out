@@ -27,14 +27,16 @@ export class TareasService {
     });
   }
 
+  // Metodo para cargar las tareas guardadas y parsear las fechas
   private cargarTareas() {
     const almacenadas = localStorage.getItem('shark_tareas');
     if (almacenadas) {
       try {
         const parsed = JSON.parse(almacenadas);
-        const convalidadas = parsed.map((t: any) => ({
-          ...t,
-          fecha: t.fecha ? new Date(t.fecha) : undefined
+        // Convertimos los strings de fecha a objetos Date reales
+        const convalidadas = parsed.map((tareaParseada: any) => ({
+          ...tareaParseada,
+          fecha: tareaParseada.fecha ? new Date(tareaParseada.fecha) : undefined
         }));
         this.tareas.set(convalidadas);
       } catch (e) {
@@ -45,18 +47,18 @@ export class TareasService {
 
   // Agrega una nueva tarea al inicio de la lista
   addTarea(tarea: Tarea) {
-    this.tareas.update(t => [tarea, ...t]);
+    this.tareas.update(lista => [tarea, ...lista]);
   }
 
   // Filtra la lista para eliminar por ID
   deleteTarea(id: string) {
-    this.tareas.update(t => t.filter(tarea => tarea.id !== id));
+    this.tareas.update(lista => lista.filter(tareaActual => tareaActual.id !== id));
   }
 
   // Alterna el estado de completado de una tarea
   toggleTarea(id: string) {
-    this.tareas.update(t => t.map(tarea => 
-      tarea.id === id ? { ...tarea, completada: !tarea.completada } : tarea
+    this.tareas.update(lista => lista.map(tareaActual => 
+      tareaActual.id === id ? { ...tareaActual, completada: !tareaActual.completada } : tareaActual
     ));
   }
 }

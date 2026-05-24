@@ -1,5 +1,5 @@
 import { Injectable, signal, effect, inject } from '@angular/core';
-import { TimeService } from './time.service';
+import { TimeService } from '../../shared/services/time.service';
 import { StatsService } from '../../shared/services/stats.service';
 import { CategoriaItem, RarezaItem, ItemTienda, ItemEnVenta } from '../models/tienda.model';
 import { ACCESORIOS_CATALOGO } from '../constants/accesorios.constants';
@@ -40,7 +40,7 @@ export class TiendaService {
     effect(() => {
       const hoy = this.timeService.fechaSimulada();
       this.comprobarRotacion(hoy);
-    }, { allowSignalWrites: true });
+    });
   }
 
   // Metodo de lectura inicial del almacenamiento
@@ -96,7 +96,7 @@ export class TiendaService {
 
     categorias.forEach(cat => {
       // Filtrar items de esta categoria que estaban pineados (y no comprados)
-      const pineados = escaparateActual.filter(i => i.categoria === cat && i.pineado && !i.comprado);
+      const pineados = escaparateActual.filter(itemPineado => itemPineado.categoria === cat && itemPineado.pineado && !itemPineado.comprado);
       
       for (let i = 0; i < 3; i++) {
         if (pineados[i]) {
@@ -119,25 +119,25 @@ export class TiendaService {
 
   // Fija o suelta un objeto del escaparate para la siguiente rotacion
   togglePin(id: string) {
-    this.escaparate.update(esc => esc.map(item => 
+    this.escaparate.update(listaEscaparate => listaEscaparate.map(item => 
       item.id === id ? { ...item, pineado: !item.pineado } : item
     ));
   }
 
   // Metodo de transaccion para comprar un objeto
   comprarItem(id: string) {
-    const item = this.escaparate().find(i => i.id === id);
+    const item = this.escaparate().find(itemEscaparate => itemEscaparate.id === id);
     if (!item || item.comprado) return false;
 
     if (this.statsService.monedas() >= item.precio) {
       // Descontar monedas e incrementar la estadistica global de items
-      this.statsService.monedas.update(v => v - item.precio);
-      this.statsService.itemsInventario.update(v => v + 1);
+      this.statsService.monedas.update(monedasActuales => monedasActuales - item.precio);
+      this.statsService.itemsInventario.update(cantidadItems => cantidadItems + 1);
       
       // Registrar en el inventario y marcar como vendido en el escaparate
-      this.inventario.update(inv => [...inv, item.id]);
-      this.escaparate.update(esc => esc.map(i => 
-        i.id === id ? { ...i, comprado: true, pineado: false } : i
+      this.inventario.update(inventarioActual => [...inventarioActual, item.id]);
+      this.escaparate.update(listaEscaparate => listaEscaparate.map(itemActual => 
+        itemActual.id === id ? { ...itemActual, comprado: true, pineado: false } : itemActual
       ));
       
       return true;

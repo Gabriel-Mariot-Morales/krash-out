@@ -2,7 +2,7 @@ import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { StatsService } from '../../shared/services/stats.service';
-import { TimeService } from '../../core/services/time.service';
+import { TimeService } from '../../shared/services/time.service';
 
 @Component({
   selector: 'app-perfil',
@@ -53,11 +53,11 @@ export class Perfil {
   }
 
   debugAnadirOro() {
-    this.statsService.monedas.update(v => v + 1000);
+    this.statsService.monedas.update(monedasActuales => monedasActuales + 1000);
   }
 
   debugAnadirExp() {
-    this.statsService.experiencia.update(v => v + 1000);
+    this.statsService.experiencia.update(expActual => expActual + 1000);
   }
 
   debugResetearInventario() {

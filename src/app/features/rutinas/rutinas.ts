@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RutinasService, Rutina } from '../../core/services/rutinas.service';
 import { StatsService } from '../../shared/services/stats.service';
 import { ToastService } from '../../shared/services/toast.service';
-import { TimeService } from '../../core/services/time.service';
+import { TimeService } from '../../shared/services/time.service';
 import { ItemForm } from '../../shared/components/item-form/item-form';
 
 @Component({
@@ -53,17 +53,17 @@ export class Rutinas implements OnDestroy {
 
   // Metodo auxiliar para ordenar rutinas por hora (las vacias van al final)
   private ordenarPorHora(lista: Rutina[]): Rutina[] {
-    return [...lista].sort((a, b) => {
-      if (!a.hora) return 1;
-      if (!b.hora) return -1;
-      return a.hora.localeCompare(b.hora);
+    return [...lista].sort((rutinaA, rutinaB) => {
+      if (!rutinaA.hora) return 1;
+      if (!rutinaB.hora) return -1;
+      return rutinaA.hora.localeCompare(rutinaB.hora);
     });
   }
 
   // Filtrado computado para las rutinas programadas el dia de hoy
   rutinasHoy = computed(() => {
     const diaActual = this.getDiaSemanaActual();
-    const filtradas = this.rutinasService.rutinas().filter(r => r.dias.includes(diaActual));
+    const filtradas = this.rutinasService.rutinas().filter(rutina => rutina.dias.includes(diaActual));
     return this.ordenarPorHora(filtradas);
   });
 
@@ -76,7 +76,7 @@ export class Rutinas implements OnDestroy {
   getDiasString(dias: number[]): string {
     if (dias.length === 7) return 'Todos los días';
     const mapa: { [key: number]: string } = { 1: 'L', 2: 'M', 3: 'X', 4: 'J', 5: 'V', 6: 'S', 7: 'D' };
-    return [...dias].sort((a,b) => a - b).map(d => mapa[d]).join(', ');
+    return [...dias].sort((diaA, diaB) => diaA - diaB).map(dia => mapa[dia]).join(', ');
   }
 
   // Abre el formulario configurado en modo rutina para crear una nueva
@@ -140,6 +140,7 @@ export class Rutinas implements OnDestroy {
     });
   }
 
+  // Metodos de interaccion gestual (Drag and Drop nativo)
   onPointerDown(event: PointerEvent, id: string) {
     this.activeSwipeId = id;
     this.startX = event.clientX;
@@ -197,6 +198,7 @@ export class Rutinas implements OnDestroy {
     (event.target as HTMLElement).releasePointerCapture(event.pointerId);
   }
 
+  // Calculo visual del desplazamiento horizontal
   getTransform(id: string): string {
     if (this.activeSwipeId === id) {
       return `translateX(${this.currentX - this.startX}px)`;
@@ -204,6 +206,7 @@ export class Rutinas implements OnDestroy {
     return 'translateX(0px)';
   }
 
+  // Determina la direccion del arrastre para mostrar iconos
   getSwipeDirection(id: string): 'left' | 'right' | 'none' {
     if (this.activeSwipeId !== id) return 'none';
     const deltaX = this.currentX - this.startX;
@@ -212,6 +215,7 @@ export class Rutinas implements OnDestroy {
     return 'none';
   }
 
+  // Color de fondo dinamico basado en el estado del arrastre
   getSwipeBackground(id: string): string {
     if (this.activeSwipeId !== id) return 'var(--color-shark-dark)';
     const deltaX = this.currentX - this.startX;

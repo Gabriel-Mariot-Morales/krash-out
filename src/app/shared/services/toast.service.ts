@@ -28,7 +28,7 @@ export class ToastService {
     
     // El mensaje desaparece tras 1000 milisegundos (1 segundo exacto)
     this.timeoutId = setTimeout(() => {
-      this.data.update(d => ({ ...d, visible: false }));
+      this.data.update(estadoActual => ({ ...estadoActual, visible: false }));
       this.timeoutId = null;
     }, 1000);
   }
@@ -39,6 +39,6 @@ export class ToastService {
       clearTimeout(this.timeoutId);
       this.timeoutId = null;
     }
-    this.data.update(d => ({ ...d, visible: false }));
+    this.data.update(estadoActual => ({ ...estadoActual, visible: false }));
   }
 }
