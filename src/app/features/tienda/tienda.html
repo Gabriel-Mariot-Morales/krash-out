@@ -31,7 +31,7 @@
               </div>
             } @else {
               <div class="relative size-full flex flex-col rounded-xl p-0.5 overflow-hidden shadow-lg transition-transform active:scale-95" 
-                   [ngClass]="getRarezaColor(item.rareza)">
+                   [ngClass]="colorService.getRarezaColor(item.rareza)">
                 
                 <div class="bg-shark-dark size-full rounded-lg flex flex-col p-1.5 relative z-10 justify-between min-h-0">
                   

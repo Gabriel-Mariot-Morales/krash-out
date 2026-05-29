@@ -7,10 +7,11 @@ import { Capacitor } from '@capacitor/core';
 import { AvatarService } from '../../core/services/avatar.service';
 import { TiendaService } from '../../core/services/tienda.service';
 import { StatsService } from '../../shared/services/stats.service';
-import { ItemTienda, RarezaItem } from '../../core/models/tienda.model';
+import { ItemTienda } from '../../core/models/tienda.model';
 import { ACCESORIOS_CATALOGO } from '../../core/constants/accesorios.constants';
 import { SUPERIOR_CATALOGO } from '../../core/constants/superior.constants';
 import { INFERIOR_CATALOGO } from '../../core/constants/inferior.constants';
+import { ColorService } from '../../shared/services/rarity-color.service';
 
 const CATALOGO_BASE: ItemTienda[] = [
   ...ACCESORIOS_CATALOGO, 
@@ -28,6 +29,7 @@ export class Avatar {
   private avatarService = inject(AvatarService);
   private tiendaService = inject(TiendaService);
   private statsService = inject(StatsService);
+  protected colorService = inject(ColorService);
 
   @ViewChild('lienzoAvatar') lienzoAvatar!: ElementRef;
 
@@ -106,18 +108,6 @@ export class Avatar {
 
     } catch (error) {
       console.error('Error critico al procesar la captura:', error);
-    }
-  }
-
-  // Colores de rareza heredados de la logica central de estilos
-  getRarezaColor(rareza: RarezaItem): string {
-    switch (rareza) {
-      case 'comun': return 'bg-[var(--color-rareza-comun)]';
-      case 'raro': return 'bg-[var(--color-rareza-raro)]';
-      case 'epico': return 'bg-[var(--color-rareza-epico)]';
-      case 'legendario': return 'bg-[var(--color-rareza-legendario)]';
-      case 'mitico': return 'bg-rareza-mitico';
-      default: return 'bg-shark-base';
     }
   }
 }

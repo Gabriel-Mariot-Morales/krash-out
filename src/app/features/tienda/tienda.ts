@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { TiendaService } from '../../core/services/tienda.service';
 import { StatsService } from '../../shared/services/stats.service';
-import { RarezaItem, ItemEnVenta } from '../../core/models/tienda.model'; // Añadido ItemEnVenta
-
+import { ItemEnVenta } from '../../core/models/tienda.model'; // Añadido ItemEnVenta
+import { ColorService } from '../../shared/services/rarity-color.service';
 @Component({
   selector: 'app-tienda',
   imports: [CommonModule, MatIconModule],
@@ -14,6 +14,7 @@ import { RarezaItem, ItemEnVenta } from '../../core/models/tienda.model'; // Añ
 export class Tienda implements OnInit, OnDestroy {
   private tiendaService = inject(TiendaService);
   private statsService = inject(StatsService);
+  protected colorService = inject(ColorService);
 
   // Variables reactivas para renderizar la vista
   escaparate = this.tiendaService.escaparate;
@@ -47,12 +48,12 @@ export class Tienda implements OnInit, OnDestroy {
 
     const diff = proximaRotacion.getTime() - ahora.getTime();
 
-    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const m = Math.floor((diff / 1000 / 60) % 60);
-    const s = Math.floor((diff / 1000) % 60);
+    const horaActual = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutoActual = Math.floor((diff / 1000 / 60) % 60);
+    const segundoActual = Math.floor((diff / 1000) % 60);
 
     this.tiempoRestante.set(
-      `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`
+      `${horaActual.toString().padStart(2, '0')}:${minutoActual.toString().padStart(2, '0')}:${segundoActual.toString().padStart(2, '0')}`
     );
   }
 
@@ -81,17 +82,5 @@ export class Tienda implements OnInit, OnDestroy {
   // Intenta comprar el objeto validando los fondos
   comprar(id: string) {
     this.tiendaService.comprarItem(id);
-  }
-
-  // Asigna un color de fondo/borde basado en las variables del archivo styles.css
-  getRarezaColor(rareza: RarezaItem): string {
-    switch (rareza) {
-      case 'comun': return 'bg-[var(--color-rareza-comun)]';
-      case 'raro': return 'bg-[var(--color-rareza-raro)]';
-      case 'epico': return 'bg-[var(--color-rareza-epico)]';
-      case 'legendario': return 'bg-[var(--color-rareza-legendario)]';
-      case 'mitico': return 'bg-rareza-mitico';
-      default: return 'bg-shark-base';
-    }
   }
 }

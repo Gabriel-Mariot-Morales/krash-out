@@ -33,12 +33,12 @@ export class AvatarService {
 
   // Metodo para poner una prenda en su ranura correspondiente
   equipar(categoria: 'accesorios' | 'superior' | 'inferior', id: string) {
-    this.equipamiento.update(eq => ({ ...eq, [categoria]: id }));
+    this.equipamiento.update(equipamiento => ({ ...equipamiento, [categoria]: id }));
   }
 
   // Metodo para quitarse una prenda de una ranura especifica
   desequipar(categoria: 'accesorios' | 'superior' | 'inferior') {
-    this.equipamiento.update(eq => ({ ...eq, [categoria]: null }));
+    this.equipamiento.update(equipamiento => ({ ...equipamiento, [categoria]: null }));
   }
 
   // Metodo para vaciar por completo el vestuario actual

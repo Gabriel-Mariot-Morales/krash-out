@@ -82,9 +82,10 @@
 
       <div class="flex flex-col gap-1.5">
         <label class="text-xs font-bold text-shark-base uppercase tracking-widest ml-1">Hora</label>
-        <div class="relative w-full bg-shark-dark border border-shark-base rounded-xl flex items-center transition-colors focus-within:border-ocean-light overflow-hidden">
+        <div class="relative w-full bg-shark-dark border border-shark-base rounded-xl flex items-center px-4 transition-colors focus-within:border-ocean-light overflow-hidden">
+          <mat-icon class="text-ocean-light size-5 text-xl leading-none mr-3">schedule</mat-icon>
           <input type="time" [value]="horaSeleccionada() || ''" (change)="onHoraCambiada($event)"
-            class="w-full bg-transparent p-4 text-sm text-text-light outline-hidden">
+            class="w-full bg-transparent py-4 text-sm text-text-light outline-hidden appearance-none">
         </div>
       </div>
     }

@@ -36,7 +36,6 @@ export class RutinasService {
     });
 
     // Escucha constante al reloj para desencadenar el reinicio diario
-    // Nota: allowSignalWrites ya no es necesario en Angular 21
     effect(() => {
       const hoy = this.timeService.fechaSimulada();
       this.revisarCambioDeDia(hoy);

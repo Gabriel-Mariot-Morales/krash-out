@@ -1,107 +1,109 @@
 <div class="size-full overflow-y-auto no-scrollbar px-6 py-6 relative flex flex-col">
-
   @if (!nombreUsuario()) {
-    <div class="flex-1 flex flex-col items-center justify-center my-auto">
-      <div class="bg-shark-dark border border-shark-base rounded-3xl p-6 w-full text-center shadow-2xl flex flex-col gap-5">
-        <header class="flex flex-col items-center gap-2">
-          <mat-icon class="text-bites-base size-14 text-5xl flex items-center justify-center" fontIcon="sailing"></mat-icon>
-          <h2 class="text-xl font-bold text-text-light">Bienvenido a Krash-Out</h2>
-          <p class="text-xs text-shark-light">Introduce tu nombre de usuario para empezar a navegar nocturnamente.</p>
-        </header>
-
-        <div class="flex flex-col gap-2 text-left">
-          <label class="text-xs font-bold text-shark-base uppercase tracking-widest ml-1">Tu Nombre</label>
-          <input #userInput type="text" placeholder="Ej. CapitanTiburon" maxlength="15"
-            class="bg-ocean-base border border-shark-base rounded-xl p-3 text-sm text-text-light outline-hidden focus:border-bites-base transition-all">
-        </div>
-
-        <button (click)="establecerNombre(userInput.value)" 
-          class="w-full py-3 bg-bites-base text-text-light font-bold rounded-xl shadow-lg active:scale-95 transition-transform border border-bites-dark">
-          Comenzar Aventura
-        </button>
+  <div class="flex-1 flex flex-col items-center justify-center my-auto">
+    <div class="bg-shark-dark border border-shark-base rounded-3xl p-6 w-full text-center shadow-2xl flex flex-col gap-5">
+      <header class="flex flex-col items-center gap-2">
+        <mat-icon class="text-bites-base size-14 text-5xl flex items-center justify-center" fontIcon="sailing"></mat-icon>
+        <h2 class="text-xl font-bold text-text-light">Bienvenido a Krash-Out</h2>
+        <p class="text-xs text-shark-light">Introduce tu nombre de usuario para empezar a navegar nocturnamente.</p>
+      </header>
+      <div class="flex flex-col gap-2 text-left">
+        <label class="text-xs font-bold text-shark-base uppercase tracking-widest ml-1">Tu Nombre</label>
+        <input #userInput type="text" placeholder="Ej. CapitanTiburon" maxlength="15"
+          class="bg-ocean-base border border-shark-base rounded-xl p-3 text-sm text-text-light outline-hidden focus:border-bites-base transition-all">
       </div>
+      <button (click)="establecerNombre(userInput.value)"
+        class="w-full py-3 bg-bites-base text-text-light font-bold rounded-xl shadow-lg active:scale-95 transition-transform border border-bites-dark">
+        Comenzar Aventura
+      </button>
     </div>
+  </div>
   } @else {
-    
-    <header class="flex flex-col items-center justify-center mb-8 w-full">
-      <h1 class="text-3xl font-bold text-text-light mb-1 text-center w-full">{{ nombreUsuario() }}</h1>
-      <p class="text-xs text-bites-base uppercase font-black tracking-widest mb-3 text-center">
-        Rango: {{ titulo() }}
-      </p>
-      <div class="h-px w-full bg-linear-to-r from-transparent via-text-light to-transparent opacity-20 shadow-sm"></div>
-    </header>
 
-    <section class="relative flex flex-col items-center justify-center mb-10 w-full">
-      <div class="size-36 rounded-full border-4 border-ocean-light bg-shark-dark flex flex-col items-center justify-center relative z-10 shadow-xl shadow-ocean-light/10">
-        <span class="text-shark-base text-xs font-bold uppercase tracking-widest -mb-1">Nivel</span>
-        <span class="text-5xl font-black text-text-light">{{ nivel() }}</span>
-      </div>
+  <header class="flex flex-col items-center justify-center mb-8 w-full">
+    <h1 class="text-3xl font-bold text-text-light mb-1 text-center w-full">{{ nombreUsuario() }}</h1>
+    <p class="text-xs text-bites-base uppercase font-black tracking-widest mb-3 text-center">
+      Rango: {{ titulo() }}
+    </p>
+    <div class="h-px w-full bg-linear-to-r from-transparent via-text-light to-transparent opacity-20 shadow-sm"></div>
+  </header>
+  <section class="relative flex flex-col items-center justify-center mb-10 w-full">
+    <div class="size-36 rounded-full border-4 border-ocean-light bg-shark-dark flex flex-col items-center justify-center relative z-10 shadow-xl shadow-ocean-light/10">
+      <span class="text-shark-base text-xs font-bold uppercase tracking-widest -mb-1">Nivel</span>
+      <span class="text-5xl font-black text-text-light">{{ nivel() }}</span>
+    </div>
+    <div class="w-full max-w-xs bg-shark-dark border border-shark-base rounded-full h-3.5 mt-5 overflow-hidden shadow-inner">
+      <div class="bg-ocean-light h-full transition-all duration-500 ease-out" [style.width.%]="porcentaje()"></div>
+    </div>
 
-      <div class="w-full max-w-xs bg-shark-dark border border-shark-base rounded-full h-3.5 mt-5 overflow-hidden shadow-inner">
-        <div class="bg-ocean-light h-full transition-all duration-500 ease-out" [style.width.%]="porcentaje()"></div>
-      </div>
-      
-      <div class="text-xs text-shark-base font-bold mt-2 tracking-widest uppercase">
-        {{ xpActual() }} / {{ xpMeta() }} EXP
-      </div>
-    </section>
+    <div class="text-xs text-shark-base font-bold mt-2 tracking-widest uppercase">
+      {{ xpActual() }} / {{ xpMeta() }} EXP
+    </div>
+  </section>
+  <section class="grid grid-cols-2 gap-4 w-full mb-8">
 
-    <section class="grid grid-cols-2 gap-4 w-full mb-8">
-      
-      <div class="bg-shark-dark border border-shark-base rounded-2xl p-4 flex flex-col items-center text-center shadow-xs">
-        <mat-icon class="text-blue-400 size-6 text-xl mb-1 flex items-center justify-center" fontIcon="military_tech"></mat-icon>
-        <span class="text-xl font-black text-text-light">{{ experiencia() }}</span>
-        <span class="text-xs text-shark-base uppercase font-bold tracking-tighter">EXP Total</span>
-      </div>
+    <div class="bg-shark-dark border border-shark-base rounded-2xl p-4 flex flex-col items-center text-center shadow-xs">
+      <mat-icon class="text-blue-400 size-6 text-xl mb-1 flex items-center justify-center" fontIcon="military_tech"></mat-icon>
+      <span class="text-xl font-black text-text-light">{{ experiencia() }}</span>
+      <span class="text-xs text-shark-base uppercase font-bold tracking-tighter">EXP Total</span>
+    </div>
+    <div class="bg-shark-dark border border-shark-base rounded-2xl p-4 flex flex-col items-center text-center shadow-xs">
+      <mat-icon class="text-yellow-500 size-6 text-xl mb-1 flex items-center justify-center" fontIcon="monetization_on"></mat-icon>
+      <span class="text-xl font-black text-yellow-400">{{ monedas() }}</span>
+      <span class="text-xs text-shark-base uppercase font-bold tracking-tighter">Monedas</span>
+    </div>
+    <div class="bg-shark-dark border border-shark-base rounded-2xl p-4 flex flex-col items-center text-center shadow-xs">
+      <mat-icon class="text-orange-400 size-6 text-xl mb-1 flex items-center justify-center" fontIcon="hotel_class"></mat-icon>
+      <span class="text-xl font-black text-text-light">{{ rachaMasLarga() }}d</span>
+      <span class="text-xs text-shark-base uppercase font-bold tracking-tighter">Racha Máxima</span>
+    </div>
+    <div class="bg-shark-dark border border-shark-base rounded-2xl p-4 flex flex-col items-center text-center shadow-xs">
+      <mat-icon class="text-bites-base size-6 text-xl mb-1 flex items-center justify-center" fontIcon="local_fire_department"></mat-icon>
+      <span class="text-xl font-black text-bites-base">{{ rachaActual() }}d</span>
+      <span class="text-xs text-shark-base uppercase font-bold tracking-tighter">Racha Actual</span>
+    </div>
+    <div class="bg-shark-dark border border-shark-base rounded-2xl p-4 flex flex-col items-center text-center shadow-xs">
+      <mat-icon class="text-ocean-light size-6 text-xl mb-1 flex items-center justify-center" fontIcon="task_alt"></mat-icon>
+      <span class="text-xl font-black text-text-light">{{ tareasCompletadas() }}</span>
+      <span class="text-xs text-shark-base uppercase font-bold tracking-tighter">Tareas Hechas</span>
+    </div>
+    <div class="bg-shark-dark border border-shark-base rounded-2xl p-4 flex flex-col items-center text-center shadow-xs">
+      <mat-icon class="text-emerald-400 size-6 text-xl mb-1 flex items-center justify-center" fontIcon="inventory_2"></mat-icon>
+      <span class="text-xl font-black text-text-light">{{ itemsInventario() }}</span>
+      <span class="text-xs text-shark-base uppercase font-bold tracking-tighter">Objetos Adquiridos</span>
+    </div>
+  </section>
 
-      <div class="bg-shark-dark border border-shark-base rounded-2xl p-4 flex flex-col items-center text-center shadow-xs">
-        <mat-icon class="text-yellow-500 size-6 text-xl mb-1 flex items-center justify-center" fontIcon="monetization_on"></mat-icon>
-        <span class="text-xl font-black text-yellow-400">{{ monedas() }}</span>
-        <span class="text-xs text-shark-base uppercase font-bold tracking-tighter">Monedas</span>
-      </div>
+  <section class="w-full bg-shark-dark border border-shark-base rounded-2xl p-4 mb-8 flex flex-col gap-3 shadow-md">
+    <h3 class="text-xs font-black text-text-light uppercase tracking-widest text-center">Migración de Datos</h3>
+    <div class="grid grid-cols-2 gap-2">
+      <button (click)="exportarDatos()" class="bg-ocean-base border border-ocean-light text-xs font-bold text-text-light py-3 rounded-xl active:scale-95 shadow-lg flex items-center justify-center gap-2 transition-transform">
+        <mat-icon class="size-4 text-base leading-none" fontIcon="share"></mat-icon>
+        Exportar
+      </button>
+      <button (click)="fileInput.click()" class="bg-shark-base/20 border border-shark-base text-xs font-bold text-text-light py-3 rounded-xl active:scale-95 shadow-sm flex items-center justify-center gap-2 transition-transform">
+        <mat-icon class="size-4 text-base leading-none" fontIcon="download"></mat-icon>
+        Importar
+      </button>
+      <input #fileInput type="file" accept=".json" class="hidden" (change)="procesarArchivoImportado($event)">
+    </div>
+  </section>
 
-      <div class="bg-shark-dark border border-shark-base rounded-2xl p-4 flex flex-col items-center text-center shadow-xs">
-        <mat-icon class="text-orange-400 size-6 text-xl mb-1 flex items-center justify-center" fontIcon="hotel_class"></mat-icon>
-        <span class="text-xl font-black text-text-light">{{ rachaMasLarga() }}d</span>
-        <span class="text-xs text-shark-base uppercase font-bold tracking-tighter">Racha Máxima</span>
-      </div>
+  <section class="w-full bg-blue-900/10 border border-blue-500/30 rounded-2xl p-4 mb-32 flex flex-col gap-3">
+    <h3 class="text-xs font-black text-blue-400 uppercase tracking-widest text-center">Máquina del Tiempo</h3>
 
-      <div class="bg-shark-dark border border-shark-base rounded-2xl p-4 flex flex-col items-center text-center shadow-xs">
-        <mat-icon class="text-bites-base size-6 text-xl mb-1 flex items-center justify-center" fontIcon="local_fire_department"></mat-icon>
-        <span class="text-xl font-black text-bites-base">{{ rachaActual() }}d</span>
-        <span class="text-xs text-shark-base uppercase font-bold tracking-tighter">Racha Actual</span>
-      </div>
+    <div class="text-center w-full bg-shark-dark border border-shark-base rounded-lg py-2 mb-1">
+      <span class="text-xs text-text-light font-bold">{{ fechaActual() | date:'EEEE, dd MMM yyyy' }}</span>
+    </div>
+    <div class="grid grid-cols-2 gap-2">
+      <button (click)="debugAvanzarDia()" class="bg-shark-dark text-xs font-bold text-text-light py-2.5 rounded-lg border border-shark-base active:scale-95 shadow-xs">Avanzar 1 Día</button>
+      <button (click)="debugResetearReloj()" class="bg-shark-dark text-xs font-bold text-text-light py-2.5 rounded-lg border border-shark-base active:scale-95 shadow-xs">Volver a Hoy</button>
+      <button (click)="debugAnadirOro()" class="bg-shark-dark text-xs font-bold text-text-light py-2.5 rounded-lg border border-shark-base active:scale-95 shadow-xs">+ 1000 Monedas</button>
+      <button (click)="debugAnadirExp()" class="bg-shark-dark text-xs font-bold text-text-light py-2.5 rounded-lg border border-shark-base active:scale-95 shadow-xs">+ 1000 EXP</button>
+      <button (click)="debugResetearInventario()" class="bg-shark-dark text-xs font-bold text-text-light py-2.5 rounded-lg border border-shark-base active:scale-95 shadow-xs col-span-2">Resetear Inventario</button>
+      <button (click)="debugResetearTodo()" class="bg-red-900/30 border border-red-500 text-xs font-bold text-red-400 py-2.5 rounded-lg col-span-2 active:scale-95 shadow-xs mt-2">BORRAR PARTIDA GUARDADA</button>
+    </div>
+  </section>
 
-      <div class="bg-shark-dark border border-shark-base rounded-2xl p-4 flex flex-col items-center text-center shadow-xs">
-        <mat-icon class="text-ocean-light size-6 text-xl mb-1 flex items-center justify-center" fontIcon="task_alt"></mat-icon>
-        <span class="text-xl font-black text-text-light">{{ tareasCompletadas() }}</span>
-        <span class="text-xs text-shark-base uppercase font-bold tracking-tighter">Tareas Hechas</span>
-      </div>
-
-      <div class="bg-shark-dark border border-shark-base rounded-2xl p-4 flex flex-col items-center text-center shadow-xs">
-        <mat-icon class="text-emerald-400 size-6 text-xl mb-1 flex items-center justify-center" fontIcon="inventory_2"></mat-icon>
-        <span class="text-xl font-black text-text-light">{{ itemsInventario() }}</span>
-        <span class="text-xs text-shark-base uppercase font-bold tracking-tighter">Objetos Adquiridos</span>
-      </div>
-
-    </section>
-
-    <section class="w-full bg-blue-900/10 border border-blue-500/30 rounded-2xl p-4 mb-32 flex flex-col gap-3">
-      <h3 class="text-xs font-black text-blue-400 uppercase tracking-widest text-center">Máquina del Tiempo</h3>
-      
-      <div class="text-center w-full bg-shark-dark border border-shark-base rounded-lg py-2 mb-1">
-        <span class="text-xs text-text-light font-bold">{{ fechaActual() | date:'EEEE, dd MMM yyyy' }}</span>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2">
-        <button (click)="debugAvanzarDia()" class="bg-shark-dark text-xs font-bold text-text-light py-2.5 rounded-lg border border-shark-base active:scale-95 shadow-xs">Avanzar 1 Día</button>
-        <button (click)="debugResetearReloj()" class="bg-shark-dark text-xs font-bold text-text-light py-2.5 rounded-lg border border-shark-base active:scale-95 shadow-xs">Volver a Hoy</button>
-        <button (click)="debugAnadirOro()" class="bg-shark-dark text-xs font-bold text-text-light py-2.5 rounded-lg border border-shark-base active:scale-95 shadow-xs">+ 1000 Monedas</button>
-        <button (click)="debugAnadirExp()" class="bg-shark-dark text-xs font-bold text-text-light py-2.5 rounded-lg border border-shark-base active:scale-95 shadow-xs">+ 1000 EXP</button>
-        <button (click)="debugResetearInventario()" class="bg-shark-dark text-xs font-bold text-text-light py-2.5 rounded-lg border border-shark-base active:scale-95 shadow-xs col-span-2">Resetear Inventario</button>
-        <button (click)="debugResetearTodo()" class="bg-red-900/30 border border-red-500 text-xs font-bold text-red-400 py-2.5 rounded-lg col-span-2 active:scale-95 shadow-xs mt-2">BORRAR PARTIDA GUARDADA</button>
-      </div>
-    </section>
   }
-
 </div>

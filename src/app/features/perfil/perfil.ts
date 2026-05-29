@@ -3,6 +3,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { StatsService } from '../../shared/services/stats.service';
 import { TimeService } from '../../shared/services/time.service';
+import { MigrationService } from '../../core/services/migration.service';
 
 @Component({
   selector: 'app-perfil',
@@ -13,6 +14,7 @@ import { TimeService } from '../../shared/services/time.service';
 export class Perfil {
   private statsService = inject(StatsService);
   private timeService = inject(TimeService);
+  private migrationService = inject(MigrationService);
 
   // Fecha simulada actual
   fechaActual = this.timeService.fechaSimulada;
@@ -21,7 +23,7 @@ export class Perfil {
   nombreUsuario = this.statsService.nombreUsuario;
   monedas = this.statsService.monedas;
   experiencia = this.statsService.experiencia;
-  
+
   // Elementos de progresion de nivel y titulos
   nivel = this.statsService.nivel;
   xpActual = this.statsService.xpActualNivel;
@@ -42,8 +44,28 @@ export class Perfil {
     }
   }
 
-  // --- ZONA DE DEPURACION ---
+  // --- ZONA DE MIGRACION ---
+  
+  // Ejecuta directamente el servicio de exportacion nativo
+  exportarDatos() {
+    this.migrationService.exportarDatos();
+  }
 
+  // Intercepta el archivo seleccionado por el usuario y lo procesa
+  procesarArchivoImportado(event: any) {
+    const archivo = event.target.files[0];
+    if (!archivo) return;
+    
+    const lector = new FileReader();
+    lector.onload = (e) => {
+      const contenido = e.target?.result as string;
+      this.migrationService.importarDatos(contenido);
+    };
+    // Leemos el archivo físico como si fuera texto plano
+    lector.readAsText(archivo);
+  }
+
+  // --- ZONA DE DEPURACION ---
   debugAvanzarDia() {
     this.timeService.avanzarDias(1);
   }
@@ -63,11 +85,11 @@ export class Perfil {
   debugResetearInventario() {
     this.statsService.itemsInventario.set(0);
     localStorage.removeItem('krash_tienda_inventario');
-    location.reload(); 
+    location.reload();
   }
 
   debugResetearTodo() {
     localStorage.clear();
-    location.reload(); 
+    location.reload();
   }
 }

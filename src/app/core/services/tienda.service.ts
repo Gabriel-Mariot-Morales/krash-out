@@ -1,7 +1,7 @@
 import { Injectable, signal, effect, inject } from '@angular/core';
 import { TimeService } from '../../shared/services/time.service';
 import { StatsService } from '../../shared/services/stats.service';
-import { CategoriaItem, RarezaItem, ItemTienda, ItemEnVenta } from '../models/tienda.model';
+import { CategoriaItem, ItemTienda, ItemEnVenta } from '../models/tienda.model';
 import { ACCESORIOS_CATALOGO } from '../constants/accesorios.constants';
 import { SUPERIOR_CATALOGO } from '../constants/superior.constants';
 import { INFERIOR_CATALOGO } from '../constants/inferior.constants';
@@ -56,12 +56,12 @@ export class TiendaService {
 
   // Comprueba si se ha cruzado un bloque de 6 horas (0, 6, 12, 18)
   private comprobarRotacion(hoy: Date) {
-    const año = hoy.getFullYear();
+    const ano = hoy.getFullYear();
     const mes = String(hoy.getMonth() + 1).padStart(2, '0');
     const dia = String(hoy.getDate()).padStart(2, '0');
     
     const bloqueHora = Math.floor(hoy.getHours() / 6);
-    const identificadorBloque = `${año}-${mes}-${dia}-${bloqueHora}`;
+    const identificadorBloque = `${ano}-${mes}-${dia}-${bloqueHora}`;
 
     if (this.ultimoBloqueRotacion() !== identificadorBloque || this.escaparate().length === 0) {
       this.generarNuevoEscaparate();
@@ -94,18 +94,18 @@ export class TiendaService {
 
     const categorias: CategoriaItem[] = ['accesorios', 'superior', 'inferior'];
 
-    categorias.forEach(cat => {
+    categorias.forEach(categoria => {
       // Filtrar items de esta categoria que estaban pineados (y no comprados)
-      const pineados = escaparateActual.filter(itemPineado => itemPineado.categoria === cat && itemPineado.pineado && !itemPineado.comprado);
+      const pineados = escaparateActual.filter(itemPineado => itemPineado.categoria === categoria && itemPineado.pineado && !itemPineado.comprado);
       
-      for (let i = 0; i < 3; i++) {
-        if (pineados[i]) {
+      for (let iterador = 0; iterador < 3; iterador++) {
+        if (pineados[iterador]) {
           // Mantener el item pineado en su posicion
-          nuevoEscaparate.push(pineados[i]);
-          idsEnUso.push(pineados[i].id);
+          nuevoEscaparate.push(pineados[iterador]);
+          idsEnUso.push(pineados[iterador].id);
         } else {
           // Generar un item nuevo asegurando que no se duplique en el escaparate
-          const nuevoItem = this.obtenerItemAleatorio(cat, idsEnUso);
+          const nuevoItem = this.obtenerItemAleatorio(categoria, idsEnUso);
           if (nuevoItem) {
             nuevoEscaparate.push(nuevoItem);
             idsEnUso.push(nuevoItem.id);

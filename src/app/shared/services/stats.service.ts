@@ -54,14 +54,14 @@ export class StatsService {
   tituloTiburon = computed(() => {
     const lvl = this.nivel();
     switch (true) {
-      case lvl >= 50: return 'Gran Tiburón Blanco';
-      case lvl >= 45: return 'Tiburón Martillo';
-      case lvl >= 40: return 'Tiburón Mako';
+      case lvl >= 50: return 'Megalodon';
+      case lvl >= 45: return 'Gran Tiburón Blanco';
+      case lvl >= 40: return 'Tiburón Martillo';
       case lvl >= 35: return 'Tiburón Tigre';
-      case lvl >= 30: return 'Tiburón Toro';
-      case lvl >= 25: return 'Tiburón Azul';
+      case lvl >= 30: return 'Tiburón Mako';
+      case lvl >= 25: return 'Tiburón Toro';
       case lvl >= 20: return 'Tiburón Zorro';
-      case lvl >= 15: return 'Tiburón Nodriza';
+      case lvl >= 15: return 'Tiburón Azul';
       case lvl >= 10: return 'Tiburón Leopardo';
       case lvl >= 5: return 'Tiburón Linterna';
       default: return 'Tiburón Bambú';

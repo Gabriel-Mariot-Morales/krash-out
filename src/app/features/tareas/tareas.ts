@@ -6,7 +6,6 @@ import { TareasService } from '../../core/services/tareas.service';
 import { StatsService } from '../../shared/services/stats.service';
 import { ToastService } from '../../shared/services/toast.service';
 import { ItemForm } from '../../shared/components/item-form/item-form';
-import { Tarea } from '../../core/models/tarea'; 
 
 @Component({
   selector: 'app-tareas',
@@ -42,7 +41,7 @@ export class Tareas implements OnDestroy {
 
   // Metodo para abrir el formulario de creacion de tareas inferior
   abrirCreacion() {
-    const ref = this.bottomSheet.open(ItemForm, {
+    const bottomSheetRef = this.bottomSheet.open(ItemForm, {
       data: {
         modo: 'tarea',
         titulo: 'Nueva Tarea',
@@ -51,7 +50,7 @@ export class Tareas implements OnDestroy {
     });
 
     // Guardamos la tarea si el formulario devuelve datos validos
-    ref.afterDismissed().subscribe(result => {
+    bottomSheetRef.afterDismissed().subscribe(result => {
       if (result) {
         this.tareasService.addTarea({
           id: crypto.randomUUID(),
@@ -87,7 +86,7 @@ export class Tareas implements OnDestroy {
     const deltaX = this.currentX - this.startX;
     const umbral = 100; // Distancia necesaria para activar la accion
 
-    const tareaSeleccionada = this.tareas().find(tareaAct => tareaAct.id === id);
+    const tareaSeleccionada = this.tareas().find(tareaActiva => tareaActiva.id === id);
 
     if (deltaX > umbral && tareaSeleccionada) {
       // Si desliza a la derecha completamos la tarea y damos premios
